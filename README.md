@@ -63,6 +63,34 @@ graph LR
     N --> O[End];
 ```
 
+```mermaid
+graph LR
+    A[Start] --> B{Read workflow_state.md};
+    B --> C{State.Status == READY and CurrentItem == null?};
+    C -- Yes --> D[Trigger RULE_ITERATE_01];
+    C -- No --> E{Proceed with current workflow};
+    E --> F[Execute current step];
+    F --> G[Update workflow_state.md];
+    G --> H{Phase == VALIDATE?};
+    H -- Yes --> P[Prompt user for confirmation];
+    H -- No --> E;
+
+    P --> Q{User confirmed?};
+    Q -- No --> E;
+    Q -- Yes --> R[Commit Phase];
+    R --> S[Get GitSHA];
+    S --> T[Update workflow_state.md with GitSHA];
+    T --> D;  %% loop back to iterate rule
+
+    D --> J{More items in list?};
+    J -- Yes --> K[Set CurrentItem to next item];
+    K --> L[Clear ## Log];
+    L --> M[Reset State.Phase and State.Status];
+    M --> B;
+    J -- No --> N[Set State.Status = COMPLETED_ITERATION];
+    N --> O[End];
+```
+
 **In simple terms:** The AI reads the state, interprets rules, decides what to do, acts via Cursor, observes the result, updates the state, and repeats.  The new iteration feature adds a loop within this main loop, processing items one by one, clearing context between each.
 
 ## The Workflow Phases (Defined in `workflow_state.md`)
