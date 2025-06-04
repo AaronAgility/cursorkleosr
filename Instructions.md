@@ -1,168 +1,319 @@
-# Instructions: Autonomous AI Workflow for Cursor
+# Instructions: Enhanced Autonomous AI Workflow for Cursor
 
 ## Overview
 
-Welcome to the simplified autonomous AI workflow for Cursor! This system helps your AI assistant work more effectively and consistently by giving it a structured process and a reliable memory. It uses just two core files to manage everything, now enhanced with automatic log management and long-term insight preservation.
+Welcome to the enhanced autonomous AI workflow for Cursor! This advanced system provides a hierarchical approach to AI-assisted development with **Phases > Tasks > SubTasks** organization, Git integration for semantic memory, and automated code revision cycles. The system maintains project context across sessions while ensuring high-quality, production-ready output.
 
-## How it Works: The Core Idea
+## Core Concept: Hierarchical Work Management
 
-The AI operates in a loop:
-1.  It reads the current situation and rules from `workflow_state.md`.
-2.  It decides what to do next based on those rules and the task plan.
-3.  It uses Cursor's features (like editing code or running commands in the terminal) to perform the action.
-4.  It records what happened in `workflow_state.md`.
-5.  **NEW:** It automatically manages log size and preserves insights via rotation and summarization.
-6.  It repeats the cycle.
+The AI operates with three levels of work organization:
 
-This allows the AI to handle tasks autonomously, remember context across sessions, prevent token bloat, and even attempt to fix errors based on the defined rules.
+1. **Phases**: Major project milestones (e.g., "Foundation Setup", "Core Implementation")
+2. **Tasks**: Implementation units within each phase (e.g., "Database Schema", "API Endpoints")  
+3. **SubTasks**: Atomic actions within each task (e.g., "Create User table", "Add authentication middleware")
 
-## The Two Key Files
+This hierarchy provides clear structure while maintaining granular control and progress tracking.
 
-1.  **`project_config.md` (Long-Term Memory):**
-    *   Contains the stable basics of your project: main goals, technologies used, important coding rules, and limitations.
-    *   **NEW:** Includes an auto-populated `## Changelog` section that tracks completed work summaries with dates.
-    *   Think of it as the project's "constitution." The AI reads it to understand the big picture. You set this up once and update it rarely.
+## The Three-File System
 
-2.  **`workflow_state.md` (Dynamic State, Rules & Log):**
-    *   This is the AI's main workspace file. It's constantly read and updated.
-    *   **`## State`:** Shows the current workflow phase (Analyze, Blueprint, Construct, Validate) and status (Ready, Blocked, etc.).
-    *   **`## Plan`:** Holds the step-by-step plan for the current task (created by the AI in the Blueprint phase).
-    *   **`## Rules`:** Contains *all* the rules the AI follows for workflow, memory, tools, error handling, **and now log management**.
-    *   **`## Log`:** Records everything the AI does and observes during the session. **NEW:** Automatically rotated when it exceeds 5,000 characters.
-    *   **`## ArchiveLog`:** **NEW:** Stores condensed summaries of rotated logs to preserve important findings.
+### 1. **`.cursorrules` (Global AI Behavior)**
+- Defines consistent AI behavior across all Cursor sessions
+- Sets code quality standards and Git workflow rules
+- Establishes file naming conventions and error handling patterns
+- **Usage**: Automatically loaded by Cursor, no manual management needed
 
-*(The old `memory-bank/` and `.cursor/rules/` directories are **no longer used** by this system.)*
+### 2. **`project-settings.md` (Long-Term Memory)**
+- **Project Definition**: Goals, tech stack, constraints, patterns
+- **Phase History Table**: GitSHA references for semantic memory
+- **Changelog**: Automatic summaries of completed phases
+- **Configuration**: Tokenization settings, revision frequency
+- **Usage**: Updated infrequently, provides stable project context
 
-## Streamlined Configuration
+### 3. **`workflow_state.md` (Active Workflow State)**
+- **Current State**: Active phase/task/subtask with counters
+- **Work Structure**: Hierarchical breakdown of all phases/tasks/subtasks
+- **Execution Rules**: Complete workflow logic with Git integration
+- **Progress Tracking**: Detailed logs with automatic rotation
+- **Usage**: Constantly read and updated by AI during work sessions
 
-### 🚀 **Quick Setup: System Prompt**
-For immediate setup, use this concise system prompt in your Cursor chat:
+## Enhanced Workflow Loop
 
-```
-You are an autonomous AI developer for **<YOUR PROJECT>** inside Cursor.
+The AI operates in a sophisticated multi-level cycle:
 
-Sources of truth
-• project_config.md – goal, tech stack, constraints, ## Changelog  
-• workflow_state.md – ## State, Plan, Rules, Items, Log, ArchiveLog  
-Ignore all other memory.
-
-Operating loop  
-1. Read workflow_state.md → note Phase & Status  
-2. Read project_config.md → recall standards & constraints  
-3. Act by phase  
-   • ANALYZE / BLUEPRINT → draft or refine ## Plan  
-   • CONSTRUCT → implement steps exactly as approved  
-   • VALIDATE → run tests; on success set Status = COMPLETED  
-4. Write back to workflow_state.md  
-   • Append brief reasoning/tool output to ## Log (≤ 2 000 chars per write)  
-   • Apply automatic rules  
-     – RULE_LOG_ROTATE_01: if ## Log > 5 000 chars → summarise top 5 to ## ArchiveLog, then clear ## Log  
-     – RULE_SUMMARY_01: after successful VALIDATE → prepend one‑sentence summary as a new list item under ## Changelog in project_config.md  
-5. Repeat or await user input
-
-Etiquette  
-• For any new idea first enter BLUEPRINT, store the step-by-step plan in ## Plan, set Status = NEEDS_PLAN_APPROVAL, and wait for confirmation  
-• Produce complete, idiomatic code; no TODOs or placeholders  
-• Follow naming, security, and style rules from project_config.md  
-• Keep prose minimal; prefer code, bullets, or tables  
-• Work strictly within Cursor and these two markdown files
-```
-
-### ⚙️ **Advanced Setup: User Rules**
-For enhanced control, add this to Cursor's **Settings → User Rules**:
-
-```
-Act as an expert AI programming assistant who produces clear, idiomatic code that adheres to the project's standards (see ## Tech Stack and ## Critical Patterns & Conventions in project_config.md). Maintain a thoughtful, step-by-step reasoning process that is visible to the user only in the places designated below.
-
-General Guidelines
-Respect section boundaries.
-Every write-back must stay inside the correct ## block of workflow_state.md (## State, ## Plan, ## Rules, ## Items, ## Log, ## ArchiveLog). Never mix content between them.
-
-Keep logs and status updates concise; avoid narrative fluff.
-
-Workflow Phases
-1 · BLUEPRINT (planning)
-Before writing any implementation code, switch to the BLUEPRINT phase.
-Think step-by-step: draft a detailed plan in the ## Plan section using pseudocode or clear action descriptions.
-When the plan is ready, set State.Status = NEEDS_PLAN_APPROVAL and explicitly ask the user for confirmation.
-
-2 · CONSTRUCT (implementation)
-Adhere strictly to the approved plan.
-Produce code that is correct, secure, performant, and idiomatic.
-Prioritise readability over premature optimisation.
-Leave no TODOs, placeholders, or incomplete stubs.
-Include all imports/dependencies and use conventional naming.
-Run tests/linters after each atomic change; log the results.
-
-3 · VALIDATE (final checks)
-Re-run the full test suite and any E2E checks.
-On success, set Phase = VALIDATE, Status = COMPLETED.
-Automatically trigger post-processing rules (see below).
-
-Automatic House-Keeping Rules
-Rule	Trigger	Action
-RULE_LOG_ROTATE_01	length(## Log) > 5 000 chars	Summarise the five most important points from ## Log into ## ArchiveLog, then clear ## Log.
-RULE_SUMMARY_01	Phase == VALIDATE && Status == COMPLETED	Prepend a one-sentence summary as a new list item under ## Changelog in project_config.md.
-
-Construct-Phase Coding Checklist
-✅ Follow the approved plan exactly.
-✅ Generate up-to-date, bug-free, fully functional code.
-✅ Run and pass all tests/linters.
-✅ Do not leak secrets; mask any credentials before logging.
-✅ Confirm each step's completion in ## Log (briefly).
-
-Stay disciplined: plan → seek approval → implement → validate → summarise → iterate.
+```mermaid
+flowchart TD
+    Start([Start Session]) --> ReadState{Read workflow_state.md}
+    ReadState --> CheckInit{Phase == INIT?}
+    
+    CheckInit -->|Yes| InitRules[RULE_INIT_01:<br/>Setup Phase Structure]
+    CheckInit -->|No| CheckPhaseComplete{Current Phase<br/>Complete?}
+    
+    InitRules --> SetAnalyze[Phase = ANALYZE]
+    SetAnalyze --> ReadState
+    
+    CheckPhaseComplete -->|Yes| PhaseComplete[RULE_PHASE_COMPLETE]
+    CheckPhaseComplete -->|No| ExecuteSubTask[Execute Current SubTask]
+    
+    PhaseComplete --> ReadyCommit{Phase Ready<br/>for Commit?}
+    ReadyCommit -->|Yes| CommitPhase[RULE_COMMIT_PHASE:<br/>Prompt User]
+    ReadyCommit -->|No| ExecuteSubTask
+    
+    CommitPhase --> UserApproval{User Approved?}
+    UserApproval -->|No| ExecuteSubTask
+    UserApproval -->|Yes| CreateCommit[Create Git Commit]
+    
+    CreateCommit --> StoreGitSHA[Store GitSHA in<br/>Phase History]
+    StoreGitSHA --> CheckRevision[RULE_CODE_REVISION_CHECK]
+    
+    CheckRevision --> RevisionNeeded{Revision<br/>Needed?}
+    RevisionNeeded -->|Yes| SetRevision[Phase = CODE_REVISION]
+    RevisionNeeded -->|No| NextPhase[Next Phase/Task]
+    
+    ExecuteSubTask --> UpdateWork[Update Current Work]
+    UpdateWork --> LogProgress[Log Progress]
+    LogProgress --> TaskComplete{Task Complete?}
+    
+    TaskComplete -->|Yes| TaskIteration[RULE_TASK_ITERATION]
+    TaskComplete -->|No| ReadState
+    
+    TaskIteration --> MoreTasks{More Tasks<br/>in Phase?}
+    MoreTasks -->|Yes| NextTask[Set Next Task]
+    MoreTasks -->|No| CheckPhaseComplete
+    
+    NextTask --> ReadState
+    SetRevision --> ReadState
+    NextPhase --> ReadState
 ```
 
-## Key New Features
+## Workflow Phases Explained
 
-### 🔄 **Automatic Log Management**
-- **Log Rotation:** When `## Log` exceeds 5,000 characters, `RULE_LOG_ROTATE_01` automatically summarizes the top 5 findings into `## ArchiveLog` and clears the active log.
-- **Prevents Token Bloat:** Keeps the workflow file manageable for long-running projects.
-- **Preserves Insights:** Important findings are never lost, just archived in condensed form.
+### **PHASE: ANALYZE**
+**Objective**: Understand requirements and create hierarchical breakdown
 
-### 📊 **Auto-Summary Middleware**
-- **Automatic Changelog Updates:** After every successful `VALIDATE` phase, `RULE_SUMMARY_01` appends a one-sentence summary with today's date to `project_config.md`'s `## Changelog`.
-- **Long-term Memory:** Creates an audit trail of completed work that persists across sessions.
-- **Zero Maintenance:** No manual intervention required.
+**Activities**:
+- Read `project-settings.md` for context and constraints
+- Analyze current requirements and goals
+- Break down work into logical **Phases** (major milestones)
+- For current phase, identify **Tasks** (implementation units)
+- For current task, identify **SubTasks** (atomic actions)
+- Create structured work breakdown in Phase/Task/SubTask tables
 
-### 🎯 **Improved Structure Guidance**
-- **Section Boundaries:** Clear H2 heading reminders help the AI navigate sections unambiguously.
-- **Reduced Confusion:** Explicit separation between rules, plans, and logs prevents mixing contexts.
+**Output**: Detailed hierarchical structure with no coding
 
-## Getting Started
+**Constraints**: No implementation, planning, or solution design
 
-1.  **Prepare Files:**
-    *   Locate the core files `project_config.md` and `workflow_state.md` within the `cursorkleosr/` directory.
-    *   Fill in `project_config.md` with your project's specific details (goals, tech stack, etc.).
-    *   Ensure `workflow_state.md` has the initial structure (State, Plan, Rules, Log, ArchiveLog sections) and the embedded rules.
+### **PHASE: BLUEPRINT**
+**Objective**: Create detailed implementation plans with dependencies
 
-2.  **Configure System (Choose One):**
-    *   **Quick Setup:** Use the streamlined system prompt above in your Cursor chat
-    *   **Advanced Setup:** Add the User Rules to Cursor Settings → User Rules for persistent behavior
+**Activities**:
+- Design step-by-step implementation approach for each SubTask
+- Identify dependencies between tasks and phases
+- Estimate complexity and resource requirements
+- Write comprehensive plan in `## Plan` section
+- Set `Status = NEEDS_PLAN_APPROVAL`
 
-3.  **Start Working:**
-    *   Give the AI its first task. It should initialize according to `RULE_INIT_01` in `workflow_state.md` and enter the ANALYZE phase.
-    *   Use commands like `@blueprint`, `@construct`, `@validate` (as defined by `RULE_WF_TRANSITION_01`) to guide the AI through the phases when needed.
+**Output**: Detailed implementation roadmap requiring user approval
 
-## Using the Workflow
+**Constraints**: No coding until plan approved
 
-*   **Phases:** Let the AI operate within the constraints of the current phase (Analyze, Blueprint, Construct, Validate) as shown in `workflow_state.md`. Use commands to transition phases.
-*   **Monitoring:** You can observe the AI's progress and reasoning by looking at the `## Log` and `## State` sections in `workflow_state.md`. Check `## ArchiveLog` for historical insights.
-*   **Long-term Tracking:** Review the `## Changelog` in `project_config.md` to see a timeline of completed work.
-*   **Intervention:** If the AI gets blocked (e.g., `State.Status` is `BLOCKED_*` or `NEEDS_*`), it should report the issue based on the rules. Provide clarification or approve proposed plan changes as needed.
-*   **Memory Updates:** The AI should handle updates to `workflow_state.md` automatically, including log rotation and archiving. Updates to `project_config.md` are typically proposed by the AI and require your approval (per `RULE_MEM_UPDATE_LTM_01`).
-*   **Iteration over Items:**
-    *   You can define a list of items for the AI to process sequentially in the `## Items` section of `workflow_state.md` (define the format, e.g., a Markdown table).
-    *   The AI will use `RULE_ITERATE_01` and `RULE_ITERATE_02` to process each item.
-    *   Crucially, the `## Log` section is cleared between items (by `RULE_ITERATE_01`) to prevent context "drift" and keep the AI focused on the current item.
-    *   The specific processing logic for each item is determined by the `## Plan` and executed via `RULE_PROCESS_ITEM_01`.
+### **PHASE: CONSTRUCT**
+**Objective**: Execute planned work systematically
 
-## Common Pain-Points & Fixes
+**Activities**:
+- Process SubTasks sequentially within each Task
+- Execute exactly as defined in approved plan
+- Run tests/linters after each SubTask completion
+- Capture all tool outputs in `## Log`
+- Update progress in `## Current Work` section
+- Trigger `RULE_PHASE_COMPLETE` when phase finished
 
-*   **Log bloat** → Automatically handled by `RULE_LOG_ROTATE_01`: When `## Log` exceeds 5,000 chars, it summarizes top 5 findings to `## ArchiveLog`, then clears.
-*   **Header drift** → YAML front-matter keys (`state.phase`, `state.status`) are at the top so the agent can use YAML parsers instead of fragile regex.
-*   **Model confusion about rules vs. plan** → Each section is under an explicit H2 heading with reminders in the system prompt about where to write.
-*   **Lost insights** → Auto-summary middleware appends one-sentence summaries to `project_config.md`'s Changelog after every VALIDATE, so long-term insights persist.
+**Output**: Production-ready, fully tested implementation
 
-This system aims for significant autonomy with robust memory management, but clear initial instruction via the system prompt and occasional guidance when the AI encounters complex blocks are key to success.
+**Constraints**: Follow approved plan exactly, no deviations without re-approval
+
+### **PHASE: VALIDATE**
+**Objective**: Ensure phase completion meets requirements
+
+**Activities**:
+- Execute full test suite for completed phase
+- Review all deliverables against original requirements
+- Verify integration with existing codebase
+- Check adherence to project patterns and constraints
+- Set `Status = PHASE_READY_FOR_COMMIT` if validation passes
+
+**Output**: Validated phase ready for Git commit
+
+**Constraints**: Must pass all tests and quality checks
+
+### **PHASE: CODE_REVISION** *(New Enhancement)*
+**Objective**: Maintain code quality through systematic review
+
+**Activities**:
+- Review last 3-5 phases for quality issues
+- Identify monolithic code that needs decomposition
+- Extract reusable functions and shared utilities
+- Scan for security vulnerabilities
+- Optimize performance bottlenecks
+- Improve code documentation and structure
+
+**Trigger Conditions**:
+- Every 3-5 completed phases (configurable in `project-settings.md`)
+- When accumulated complexity warrants review
+- Manual trigger available
+
+**Output**: Refactored, optimized, and documented codebase
+
+## Git Integration & Semantic Memory
+
+### Phase Commit Workflow
+
+1. **Phase Completion**: AI completes VALIDATE phase
+2. **User Review**: AI prompts: "Phase X completed. Review changes and approve commit?"
+3. **User Approval**: User reviews changes and approves/rejects
+4. **Git Commit**: AI creates commit with pattern: `"Phase {number}: {description}"`
+5. **GitSHA Storage**: Commit SHA stored in both `workflow_state.md` and `project-settings.md`
+6. **Revision Check**: System checks if code revision cycle needed
+
+### Semantic Memory Benefits
+
+- **Point-in-time References**: Each GitSHA provides exact code state for any phase
+- **Historical Tracking**: Complete project evolution visible in Phase History table
+- **Cross-session Context**: Full context restoration after Cursor restarts
+- **Regression Recovery**: Easy rollback to any previous stable phase
+- **Knowledge Persistence**: AI can reference exact code states from previous phases
+
+## System Prompt for Enhanced Workflow
+
+Use this system prompt when starting a new Cursor session:
+
+```
+You are an autonomous AI developer using the Enhanced Cursor Workflow System.
+
+**Configuration Files**:
+- project-settings.md: Long-term project context, tech stack, Phase History with GitSHAs
+- workflow_state.md: Current phase/task/subtask state, work structure, execution rules
+- .cursorrules: Global behavior standards (automatically loaded)
+
+**Hierarchical Work Structure**:
+Follow Phases > Tasks > SubTasks organization:
+- Phases: Major project milestones  
+- Tasks: Implementation units within phases
+- SubTasks: Atomic actions within tasks
+
+**Operating Loop**:
+1. Read workflow_state.md → identify current phase/task/subtask
+2. Read project-settings.md → understand project context and constraints
+3. Execute current phase following defined rules:
+   - ANALYZE: Break down requirements into hierarchical structure
+   - BLUEPRINT: Create detailed implementation plans (seek approval)
+   - CONSTRUCT: Execute SubTasks exactly as planned
+   - VALIDATE: Test and verify phase completion
+   - CODE_REVISION: Review and refactor previous phases
+4. Update workflow_state.md with progress and logs
+5. Apply automatic rules (log rotation, phase completion, Git integration)
+
+**Git Integration**:
+- After VALIDATE phase, prompt user for commit approval
+- Create commits with pattern: "Phase {number}: {description}"
+- Store GitSHA in Phase History for semantic memory
+- Check for code revision cycle trigger (every 3-5 phases)
+
+**Quality Standards**:
+- Production-ready code only (no TODOs or placeholders)
+- Complete implementations with full testing
+- Follow project patterns from project-settings.md
+- Automatic error handling and recovery
+
+**Memory Management**:
+- Short-term: Current work context in workflow_state.md
+- Medium-term: Execution logs with automatic rotation  
+- Long-term: GitSHA references and evolution tracking
+
+Start by reading both configuration files, then ask for the first high-level project phase if in INIT state.
+```
+
+## Advanced Configuration
+
+### Code Revision Frequency
+Adjust in `project-settings.md`:
+```markdown
+## Git Workflow Settings
+- **Code Revision Frequency:** Every 3-5 phases  # Customize as needed
+```
+
+### Log Management
+Automatic log rotation when `## Log` exceeds 5,000 characters:
+- Top 5 findings summarized to `## ArchiveLog`
+- Active log cleared for continued work
+- No manual intervention required
+
+### Phase History Tracking
+Automatic GitSHA storage in two locations:
+- `workflow_state.md`: Working reference for current session
+- `project-settings.md`: Permanent historical record
+
+## Best Practices
+
+### Starting a New Project
+1. Clone/fork the enhanced workflow repository
+2. Create feature branch: `git checkout -b feature/project-setup`
+3. Configure `project-settings.md` with your project details
+4. Initialize workflow with system prompt
+5. Define first high-level phase when prompted
+
+### During Development
+- Let AI manage phase/task/subtask progression automatically
+- Review and approve blueprint plans before construction
+- Approve phase commits only after reviewing changes
+- Trust the system's code revision cycle recommendations
+
+### Quality Assurance
+- All code must be production-ready with complete implementations
+- Tests must pass before phase validation
+- Security and performance considerations built into revision cycles
+- Documentation maintained automatically through workflow
+
+### Error Recovery
+- AI will attempt automatic fixes for common issues (imports, linting)
+- Critical errors will block workflow and request user input
+- Error context preserved in archived logs for future learning
+- Git history provides rollback options if needed
+
+## Migration from Original System
+
+If upgrading from the basic autonomous workflow:
+
+### Step 1: Backup
+```bash
+cp project_config.md project_config.md.backup
+cp workflow_state.md workflow_state.md.backup
+```
+
+### Step 2: File Updates
+- Rename `project_config.md` → `project-settings.md`
+- Replace `workflow_state.md` with enhanced template
+- Create `.cursorrules` file with provided template
+
+### Step 3: Initialize Enhanced System
+- Update `project-settings.md` with existing project details
+- Initialize Phase History table with current state as "Phase 0"
+- Commit migration: `git commit -m "Phase 0: Workflow Migration"`
+
+### Step 4: Resume Development
+- Use enhanced system prompt for next Cursor session
+- Continue development with hierarchical phase structure
+
+## Troubleshooting
+
+### Common Issues
+- **AI not following phases**: Ensure system prompt includes all required elements
+- **Git commits failing**: Check branch permissions and commit message format
+- **Log bloat**: Verify RULE_LOG_ROTATE_01 is functioning (should auto-trigger at 5K chars)
+- **Missing context**: Check GitSHA references in Phase History table
+
+### System Recovery
+- **Lost workflow state**: Restore from Git history using stored GitSHAs
+- **Corrupted logs**: Check `## ArchiveLog` for preserved insights
+- **Phase confusion**: Reset to last validated phase using Git checkout
+
+This enhanced system provides robust, scalable AI-assisted development with persistent memory, quality assurance, and systematic progression through complex projects.

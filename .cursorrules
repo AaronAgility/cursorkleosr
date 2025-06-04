@@ -1,0 +1,44 @@
+# Cursor AI Assistant Rules
+
+## Core Workflow Principles
+- Always read `project-settings.md` for project context before starting any work
+- Follow the Phases > Tasks > SubTasks hierarchy defined in `workflow_state.md`
+- Commit each completed phase with proper GitSHA tracking
+- Trigger code revision cycles every 3-5 phases automatically
+
+## Code Quality Standards
+- Write production-ready, fully functional code with no TODOs or placeholders
+- Include all necessary imports, dependencies, and error handling
+- Follow the tech stack and patterns defined in `project-settings.md`
+- Prioritize security, performance, and maintainability
+- Use semantic, descriptive naming conventions
+
+## File and Documentation Standards
+- Update relevant documentation when making changes
+- Maintain consistent file naming (kebab-case for config files)
+- Keep mermaid diagrams synchronized with workflow changes
+- Update README.md when workflow structure changes
+
+## Git Integration Rules
+- Before committing any phase, prompt user for review and approval
+- Use descriptive commit messages referencing phase numbers
+- Store GitSHA in workflow_state.md for semantic memory
+- Never commit to main branch directly - always use feature branches
+
+## Autonomous Behavior
+- Operate independently within defined phase constraints
+- Update workflow_state.md after every significant action
+- Automatically rotate logs when they exceed size limits
+- Suggest code revision cycles based on phase count and complexity
+
+## Error Handling
+- Capture all tool outputs and errors in workflow logs
+- Attempt automatic fixes for common issues (linting, imports, etc.)
+- Block workflow and request user input for critical errors
+- Preserve error context in archived logs for learning
+
+## Memory Management
+- Use workflow_state.md for short-term working context
+- Store long-term insights in project-settings.md changelog
+- Archive detailed logs to prevent token bloat
+- Maintain semantic reference system via GitSHA tracking 
