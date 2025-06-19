@@ -1,17 +1,67 @@
 # Cursor AI Assistant Rules
 
 ## Core Workflow Principles
-- Always read `project-settings.md` for project context before starting any work
-- Follow the Phases > Tasks > SubTasks hierarchy defined in `workflow_state.md`
+- Always read `.cursor/rules/project-settings.md` for project context before starting any work
+- Follow the Phases > Tasks > SubTasks hierarchy defined in `.cursor/workflow_state.md`
 - Commit each completed phase with proper GitSHA tracking
 - Trigger code revision cycles every 3-5 phases automatically
+- Use non-breaking user input capture to maximize tool chain efficiency
+
+## User Interaction Defaults
+
+### Commit Behavior
+- **Mode Options**: insanity, always-ask
+- **Default Mode**: always-ask
+- **Commit Timeout**: 300 seconds
+
+### User Input Timeout Responses
+- **Continue**: Proceed with default action and continue workflow
+- **Wait**: Pause workflow and wait for explicit user response
+- **Default Timeout Behavior**: Continue
+
+### Interaction Defaults by Type
+```yaml
+commit_approval:
+  timeout: 300
+  default: approve
+  timeout_action: Continue
+  
+plan_approval:
+  timeout: 600
+  default: reject
+  timeout_action: Wait
+  
+choice_selection:
+  timeout: 180
+  default: first_option
+  timeout_action: Continue
+  
+manual_input:
+  timeout: 900
+  default: skip
+  timeout_action: Wait
+  
+confirmation:
+  timeout: 240
+  default: yes
+  timeout_action: Continue
+```
+
+## Tool Chain Efficiency Rules
+- Maximize use of all 25 available tool calls
+- Use `.cursor/tools/user-input-capture.sh` for immediate user input needs
+- Never break tool chains for user input - capture and continue
+- Group related work before requesting user input
+- Plan multiple inputs within single tool chain when possible
 
 ## Code Quality Standards
 - Write production-ready, fully functional code with no TODOs or placeholders
 - Include all necessary imports, dependencies, and error handling
-- Follow the tech stack and patterns defined in `project-settings.md`
+- Follow the tech stack and patterns defined in `.cursor/rules/project-settings.md`
+- Use Agility CMS best practices and SDK patterns from `.cursor/libs/`
 - Prioritize security, performance, and maintainability
 - Use semantic, descriptive naming conventions
+- Implement proper TypeScript types for Agility CMS content models
 
 ## File and Documentation Standards
 - Update relevant documentation when making changes
@@ -20,25 +70,41 @@
 - Update README.md when workflow structure changes
 
 ## Git Integration Rules
-- Before committing any phase, prompt user for review and approval
+- Before committing any phase, check commit mode in .cursorrules
+- If insanity mode: Auto-commit with descriptive messages
+- If always-ask mode: Use non-breaking input capture for approval
 - Use descriptive commit messages referencing phase numbers
 - Store GitSHA in workflow_state.md for semantic memory
 - Never commit to main branch directly - always use feature branches
 
 ## Autonomous Behavior
 - Operate independently within defined phase constraints
-- Update workflow_state.md after every significant action
+- Update .cursor/workflow_state.md after every significant action
 - Automatically rotate logs when they exceed size limits
 - Suggest code revision cycles based on phase count and complexity
+- Apply timeout actions based on configured defaults
 
 ## Error Handling
 - Capture all tool outputs and errors in workflow logs
 - Attempt automatic fixes for common issues (linting, imports, etc.)
-- Block workflow and request user input for critical errors
+- For critical errors: Create user interaction or apply default action
 - Preserve error context in archived logs for learning
 
 ## Memory Management
-- Use workflow_state.md for short-term working context
-- Store long-term insights in project-settings.md changelog
+- Use .cursor/workflow_state.md for short-term working context
+- Store long-term insights in `.cursor/rules/project-settings.md` changelog
 - Archive detailed logs to prevent token bloat
-- Maintain semantic reference system via GitSHA tracking 
+- Maintain semantic reference system via GitSHA tracking
+
+## Non-Breaking Input Capture Rules
+- Use `run_terminal_cmd` with `.cursor/tools/user-input-capture.sh` for immediate input
+- Follow pattern: capture input → read response → continue based on response
+- Handle timeouts gracefully using configured defaults
+- Support multiple inputs per tool chain
+- Always validate responses and handle edge cases
+
+## Semantic Timeout Actions
+- **Continue**: "Applying default action and continuing workflow"
+- **Wait**: "Timeout reached. Workflow paused pending user response"
+- Log timeout actions for user awareness
+- Provide clear feedback on timeout resolution 

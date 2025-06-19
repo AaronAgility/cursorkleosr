@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to the enhanced autonomous AI workflow for Cursor! This advanced system provides a hierarchical approach to AI-assisted development with **Phases > Tasks > SubTasks** organization, Git integration for semantic memory, and automated code revision cycles. The system maintains project context across sessions while ensuring high-quality, production-ready output.
+Welcome to the enhanced autonomous AI workflow for Cursor! This advanced system provides a hierarchical approach to AI-assisted development with **Phases > Tasks > SubTasks** organization, **non-blocking user interaction system**, **automatic archiving capabilities**, Git integration for semantic memory, and automated code revision cycles. The system maintains project context across sessions while ensuring high-quality, production-ready output.
 
 ## Core Concept: Hierarchical Work Management
 
@@ -14,7 +14,7 @@ The AI operates with three levels of work organization:
 
 This hierarchy provides clear structure while maintaining granular control and progress tracking.
 
-## The Three-File System
+## The Enhanced Five-File System
 
 ### 1. **`.cursorrules` (Global AI Behavior)**
 - Defines consistent AI behavior across all Cursor sessions
@@ -22,47 +22,69 @@ This hierarchy provides clear structure while maintaining granular control and p
 - Establishes file naming conventions and error handling patterns
 - **Usage**: Automatically loaded by Cursor, no manual management needed
 
-### 2. **`project-settings.md` (Long-Term Memory)**
+### 2. **`.cursor/rules/project-settings.md` (Long-Term Memory)**
 - **Project Definition**: Goals, tech stack, constraints, patterns
 - **Phase History Table**: GitSHA references for semantic memory
 - **Changelog**: Automatic summaries of completed phases
-- **Configuration**: Tokenization settings, revision frequency
+- **Configuration**: Tokenization settings, revision frequency, archiving thresholds
 - **Usage**: Updated infrequently, provides stable project context
 
-### 3. **`workflow_state.md` (Active Workflow State)**
+### 3. **`.cursor/workflow_state.md` (Active Workflow State)**
 - **Current State**: Active phase/task/subtask with counters
 - **Work Structure**: Hierarchical breakdown of all phases/tasks/subtasks
+- **User Interactions**: Non-blocking interaction management
 - **Execution Rules**: Complete workflow logic with Git integration
-- **Progress Tracking**: Detailed logs with automatic rotation
+- **Progress Tracking**: Detailed logs with automatic rotation and archiving
 - **Usage**: Constantly read and updated by AI during work sessions
+
+### 4. **`.cursor/tools/user-interaction-system.md` (Non-Blocking User Interface)** *(New)*
+- **Interaction Management**: Tool-call based user prompt system
+- **Response Processing**: Automatic handling of user input without workflow interruption
+- **Timeout Handling**: Configurable defaults and timeout management
+- **Integration Rules**: Seamless workflow continuation after user responses
+- **Usage**: Referenced for interaction patterns, updated with new interaction types
+
+### 5. **`.cursor/tools/archiving-system.md` (Automatic File Management)** *(New)*
+- **Archive Configuration**: Size thresholds, retention policies, directory structure
+- **Recovery Operations**: Context restoration and merge capabilities  
+- **Performance Optimization**: File size management for optimal editing
+- **Archive Index**: Centralized tracking of all archived content
+- **Usage**: Automatic operation with manual recovery options
 
 ## Enhanced Workflow Loop
 
-The AI operates in a sophisticated multi-level cycle:
+The AI operates in a sophisticated multi-level cycle with non-blocking user interactions:
 
 ```mermaid
 flowchart TD
     Start([Start Session]) --> ReadState{Read workflow_state.md}
-    ReadState --> CheckInit{Phase == INIT?}
+    ReadState --> CheckArchive[RULE_ARCHIVE_SIZE_CHECK]
+    CheckArchive --> CheckInit{Phase == INIT?}
     
     CheckInit -->|Yes| InitRules[RULE_INIT_01:<br/>Setup Phase Structure]
-    CheckInit -->|No| CheckPhaseComplete{Current Phase<br/>Complete?}
+    CheckInit -->|No| CheckInteractions[RULE_CHECK_INTERACTIONS]
     
     InitRules --> SetAnalyze[Phase = ANALYZE]
     SetAnalyze --> ReadState
     
+    CheckInteractions --> ProcessResponses{Pending Responses?}
+    ProcessResponses -->|Yes| HandleResponses[Process User Responses]
+    ProcessResponses -->|No| CheckPhaseComplete{Current Phase<br/>Complete?}
+    
+    HandleResponses --> UpdateWorkflow[Update Workflow State]
+    UpdateWorkflow --> CheckPhaseComplete
+    
     CheckPhaseComplete -->|Yes| PhaseComplete[RULE_PHASE_COMPLETE]
     CheckPhaseComplete -->|No| ExecuteSubTask[Execute Current SubTask]
     
-    PhaseComplete --> ReadyCommit{Phase Ready<br/>for Commit?}
-    ReadyCommit -->|Yes| CommitPhase[RULE_COMMIT_PHASE:<br/>Prompt User]
-    ReadyCommit -->|No| ExecuteSubTask
+    PhaseComplete --> CreateCommitInteraction[RULE_CREATE_INTERACTION:<br/>Commit Approval]
+    CreateCommitInteraction --> ContinueOtherWork[Continue Available Work]
     
-    CommitPhase --> UserApproval{User Approved?}
-    UserApproval -->|No| ExecuteSubTask
-    UserApproval -->|Yes| CreateCommit[Create Git Commit]
+    ContinueOtherWork --> CheckCommitApproval{Commit Approved?}
+    CheckCommitApproval -->|No| ExecuteSubTask
+    CheckCommitApproval -->|Yes| CommitPhase[RULE_COMMIT_PHASE]
     
-    CreateCommit --> StoreGitSHA[Store GitSHA in<br/>Phase History]
+    CommitPhase --> StoreGitSHA[Store GitSHA in<br/>Phase History]
     StoreGitSHA --> CheckRevision[RULE_CODE_REVISION_CHECK]
     
     CheckRevision --> RevisionNeeded{Revision<br/>Needed?}
@@ -71,7 +93,10 @@ flowchart TD
     
     ExecuteSubTask --> UpdateWork[Update Current Work]
     UpdateWork --> LogProgress[Log Progress]
-    LogProgress --> TaskComplete{Task Complete?}
+    LogProgress --> CheckLogSize{Log Size > 5KB?}
+    CheckLogSize -->|Yes| RotateLog[RULE_LOG_ROTATE_01]
+    CheckLogSize -->|No| TaskComplete{Task Complete?}
+    RotateLog --> TaskComplete
     
     TaskComplete -->|Yes| TaskIteration[RULE_TASK_ITERATION]
     TaskComplete -->|No| ReadState
@@ -85,13 +110,54 @@ flowchart TD
     NextPhase --> ReadState
 ```
 
+## Key Enhancements
+
+### Non-Blocking User Interaction System
+
+**Problem Solved**: Traditional workflows stop execution when user input is needed, breaking the tool chain and reducing efficiency.
+
+**Solution**: Tool-call based interaction system that allows workflow to continue while waiting for user responses.
+
+**Key Features**:
+- **Parallel Processing**: AI continues available work while waiting for user input
+- **Timeout Management**: Configurable timeouts with reasonable defaults
+- **Response Methods**: Direct table editing, tool calls, or natural language responses
+- **Context Preservation**: Full audit trail of all user decisions
+
+**Example Interaction Flow**:
+1. AI completes Phase 3, needs commit approval
+2. Creates interaction: `INT001 | COMMIT_APPROVAL | "Phase 3 completed. Ready to commit?" | PENDING`
+3. Continues with Phase 4 planning while waiting
+4. User responds: `approve` in Response column
+5. AI processes approval and executes commit
+6. Workflow continues seamlessly
+
+### Automatic Archiving System
+
+**Problem Solved**: Files like `.cursor/workflow_state.md` and `.cursor/rules/project-settings.md` become too large for efficient editing, causing performance issues.
+
+**Solution**: Intelligent archiving system that moves large files to `.cursor/archive` while preserving essential context.
+
+**Key Features**:
+- **Size-Based Triggers**: Automatic archiving when files exceed thresholds
+- **Context Preservation**: GitSHA references and phase contexts maintained
+- **Recovery Operations**: Full context restoration when needed
+- **Performance Optimization**: Working files remain optimally sized
+
+**Example Archiving Flow**:
+1. `.cursor/workflow_state.md` grows to 15,247 characters (threshold: 15,000)
+2. System creates `ARC-WF-20250116-001` in `.cursor/archive/workflow_state/`
+3. Original file truncated to essential structure with archive reference
+4. AI continues with optimal file size
+5. Full context recoverable when needed
+
 ## Workflow Phases Explained
 
 ### **PHASE: ANALYZE**
 **Objective**: Understand requirements and create hierarchical breakdown
 
 **Activities**:
-- Read `project-settings.md` for context and constraints
+- Read `.cursor/rules/project-settings.md` for context and constraints
 - Analyze current requirements and goals
 - Break down work into logical **Phases** (major milestones)
 - For current phase, identify **Tasks** (implementation units)
@@ -110,11 +176,11 @@ flowchart TD
 - Identify dependencies between tasks and phases
 - Estimate complexity and resource requirements
 - Write comprehensive plan in `## Plan` section
-- Set `Status = NEEDS_PLAN_APPROVAL`
+- Create non-blocking approval interaction via `RULE_CREATE_INTERACTION`
 
-**Output**: Detailed implementation roadmap requiring user approval
+**Output**: Detailed implementation roadmap with non-blocking approval request
 
-**Constraints**: No coding until plan approved
+**Constraints**: No coding until plan approved via interaction system
 
 ### **PHASE: CONSTRUCT**
 **Objective**: Execute planned work systematically
@@ -139,13 +205,13 @@ flowchart TD
 - Review all deliverables against original requirements
 - Verify integration with existing codebase
 - Check adherence to project patterns and constraints
-- Set `Status = PHASE_READY_FOR_COMMIT` if validation passes
+- Create non-blocking commit approval interaction
 
-**Output**: Validated phase ready for Git commit
+**Output**: Validated phase with non-blocking commit request
 
 **Constraints**: Must pass all tests and quality checks
 
-### **PHASE: CODE_REVISION** *(New Enhancement)*
+### **PHASE: CODE_REVISION** *(Enhanced)*
 **Objective**: Maintain code quality through systematic review
 
 **Activities**:
@@ -163,16 +229,18 @@ flowchart TD
 
 **Output**: Refactored, optimized, and documented codebase
 
-## Git Integration & Semantic Memory
+## Enhanced Git Integration & Semantic Memory
 
-### Phase Commit Workflow
+### Non-Blocking Phase Commit Workflow
 
 1. **Phase Completion**: AI completes VALIDATE phase
-2. **User Review**: AI prompts: "Phase X completed. Review changes and approve commit?"
-3. **User Approval**: User reviews changes and approves/rejects
-4. **Git Commit**: AI creates commit with pattern: `"Phase {number}: {description}"`
-5. **GitSHA Storage**: Commit SHA stored in both `workflow_state.md` and `project-settings.md`
-6. **Revision Check**: System checks if code revision cycle needed
+2. **Create Interaction**: AI creates commit approval interaction (`RULE_CREATE_INTERACTION`)
+3. **Continue Work**: AI proceeds with other available tasks while waiting
+4. **User Response**: User approves/rejects via interaction system
+5. **Process Response**: AI handles response through `RULE_CHECK_INTERACTIONS`
+6. **Execute Commit**: If approved, create commit with pattern: `"Phase {number}: {description}"`
+7. **GitSHA Storage**: Commit SHA stored in both `workflow_state.md` and `project-settings.md`
+8. **Revision Check**: System checks if code revision cycle needed
 
 ### Semantic Memory Benefits
 
@@ -181,17 +249,21 @@ flowchart TD
 - **Cross-session Context**: Full context restoration after Cursor restarts
 - **Regression Recovery**: Easy rollback to any previous stable phase
 - **Knowledge Persistence**: AI can reference exact code states from previous phases
+- **Archive Integration**: Historical context preserved even after archiving
 
 ## System Prompt for Enhanced Workflow
 
 Use this system prompt when starting a new Cursor session:
 
 ```
-You are an autonomous AI developer using the Enhanced Cursor Workflow System.
+You are an autonomous AI developer using the Enhanced Cursor Workflow System with non-blocking user interactions and automatic archiving.
 
 **Configuration Files**:
-- project-settings.md: Long-term project context, tech stack, Phase History with GitSHAs
-- workflow_state.md: Current phase/task/subtask state, work structure, execution rules
+- .cursor/rules/project-settings.md: Agility CMS project context, tech stack, Phase History with GitSHAs, archiving configuration
+- .cursor/workflow_state.md: Current phase/task/subtask state, work structure, execution rules, user interactions
+- .cursor/tools/user-interaction-system.md: Non-blocking interaction patterns and response processing
+- .cursor/tools/archiving-system.md: Automatic file management and recovery operations
+- .cursor/libs/: Agility CMS SDK documentation (fetch, management, sync, apps, next)
 - .cursorrules: Global behavior standards (automatically loaded)
 
 **Hierarchical Work Structure**:
@@ -200,21 +272,39 @@ Follow Phases > Tasks > SubTasks organization:
 - Tasks: Implementation units within phases
 - SubTasks: Atomic actions within tasks
 
-**Operating Loop**:
-1. Read workflow_state.md → identify current phase/task/subtask
-2. Read project-settings.md → understand project context and constraints
-3. Execute current phase following defined rules:
+**Enhanced Operating Loop**:
+1. Read .cursor/workflow_state.md → identify current phase/task/subtask and check for pending interactions
+2. Check archive sizes via RULE_ARCHIVE_SIZE_CHECK → archive if needed
+3. Process pending user interactions via RULE_CHECK_INTERACTIONS
+4. Read .cursor/rules/project-settings.md → understand project context and constraints
+5. Execute current phase following defined rules:
    - ANALYZE: Break down requirements into hierarchical structure
-   - BLUEPRINT: Create detailed implementation plans (seek approval)
+   - BLUEPRINT: Create detailed implementation plans (create non-blocking approval interaction)
    - CONSTRUCT: Execute SubTasks exactly as planned
-   - VALIDATE: Test and verify phase completion
+   - VALIDATE: Test and verify phase completion (create non-blocking commit interaction)
    - CODE_REVISION: Review and refactor previous phases
-4. Update workflow_state.md with progress and logs
-5. Apply automatic rules (log rotation, phase completion, Git integration)
+6. Update .cursor/workflow_state.md with progress and logs
+7. Apply automatic rules (log rotation, phase completion, archiving, Git integration)
+8. Continue with available work while waiting for user responses
+
+**Non-Blocking User Interactions**:
+- Create interactions via RULE_CREATE_INTERACTION for all user input needs
+- Never stop workflow execution waiting for user responses
+- Continue with other available tasks while interactions are pending
+- Process responses through RULE_CHECK_INTERACTIONS periodically
+- Support multiple pending interactions simultaneously
+
+**Automatic Archiving**:
+- Monitor file sizes against configured thresholds
+- Archive automatically when limits exceeded
+- Preserve GitSHA references and phase contexts in archives
+- Maintain working files at optimal sizes for editing
+- Support full context recovery when needed
 
 **Git Integration**:
-- After VALIDATE phase, prompt user for commit approval
-- Create commits with pattern: "Phase {number}: {description}"
+- After VALIDATE phase, create non-blocking commit approval interaction
+- Continue other work while waiting for approval
+- Create commits with pattern: "Phase {number}: {description}" when approved
 - Store GitSHA in Phase History for semantic memory
 - Check for code revision cycle trigger (every 3-5 phases)
 
@@ -226,13 +316,31 @@ Follow Phases > Tasks > SubTasks organization:
 
 **Memory Management**:
 - Short-term: Current work context in workflow_state.md
-- Medium-term: Execution logs with automatic rotation  
-- Long-term: GitSHA references and evolution tracking
+- Medium-term: Execution logs with automatic rotation and archiving
+- Long-term: GitSHA references, evolution tracking, and archived context
 
-Start by reading both configuration files, then ask for the first high-level project phase if in INIT state.
+Start by reading all configuration files, checking for pending interactions, verifying archive status, then ask for the first high-level project phase if in INIT state.
 ```
 
 ## Advanced Configuration
+
+### User Interaction System
+Adjust in `project-settings.md`:
+```markdown
+## User Interaction System
+- **Interaction Mode:** Non-blocking tool-call based
+- **Response Timeout:** 300 seconds (5 minutes)  # Customize per interaction type
+- **Auto-proceed on Timeout:** Configure per interaction type
+```
+
+### Archiving System
+Adjust in `project-settings.md`:
+```markdown
+## Archiving System Settings
+- **Archive Directory:** .cursor/archive/
+- **File Size Threshold:** 15,000 characters  # Customize per file type
+- **Archive Trigger:** Automatic on file size or manual
+```
 
 ### Code Revision Frequency
 Adjust in `project-settings.md`:
@@ -244,13 +352,15 @@ Adjust in `project-settings.md`:
 ### Log Management
 Automatic log rotation when `## Log` exceeds 5,000 characters:
 - Top 5 findings summarized to `## ArchiveLog`
+- Large logs automatically archived to `.cursor/archive/logs/`
 - Active log cleared for continued work
 - No manual intervention required
 
 ### Phase History Tracking
-Automatic GitSHA storage in two locations:
+Automatic GitSHA storage in multiple locations:
 - `workflow_state.md`: Working reference for current session
 - `project-settings.md`: Permanent historical record
+- Archive files: Context-preserved references
 
 ## Best Practices
 
@@ -258,14 +368,27 @@ Automatic GitSHA storage in two locations:
 1. Clone/fork the enhanced workflow repository
 2. Create feature branch: `git checkout -b feature/project-setup`
 3. Configure `project-settings.md` with your project details
-4. Initialize workflow with system prompt
+4. Initialize workflow with enhanced system prompt
 5. Define first high-level phase when prompted
 
 ### During Development
 - Let AI manage phase/task/subtask progression automatically
-- Review and approve blueprint plans before construction
-- Approve phase commits only after reviewing changes
-- Trust the system's code revision cycle recommendations
+- Respond to interactions through the table system, tool calls, or natural language
+- AI will continue other work while waiting for your responses
+- Approve phase commits by responding to commit approval interactions
+- Trust the system's automatic archiving and code revision cycle recommendations
+
+### User Interaction Best Practices
+- Respond to interactions promptly for optimal workflow flow
+- Use clear responses: "approve", "reject", "modify", etc.
+- Add comments in interaction responses for complex decisions
+- Review interaction history for decision audit trail
+
+### Archive Management
+- Trust automatic archiving - it preserves all context
+- Use recovery operations when historical context needed
+- Monitor archive index for system health
+- Archive manually before major changes if needed
 
 ### Quality Assurance
 - All code must be production-ready with complete implementations
@@ -275,45 +398,65 @@ Automatic GitSHA storage in two locations:
 
 ### Error Recovery
 - AI will attempt automatic fixes for common issues (imports, linting)
-- Critical errors will block workflow and request user input
+- Critical errors will create interactions requesting user input
 - Error context preserved in archived logs for future learning
 - Git history provides rollback options if needed
+- Archive system provides additional recovery points
 
-## Migration from Original System
+## Migration from Previous Systems
 
-If upgrading from the basic autonomous workflow:
+If upgrading from the basic autonomous workflow or manifest.md systems:
 
 ### Step 1: Backup
 ```bash
 cp project_config.md project_config.md.backup
 cp workflow_state.md workflow_state.md.backup
+cp manifest.md manifest.md.backup  # If exists
 ```
 
 ### Step 2: File Updates
 - Rename `project_config.md` → `project-settings.md`
 - Replace `workflow_state.md` with enhanced template
+- Create `user-interaction-system.md` with provided template
+- Create `archiving-system.md` with provided template
 - Create `.cursorrules` file with provided template
 
 ### Step 3: Initialize Enhanced System
 - Update `project-settings.md` with existing project details
+- Add archiving and interaction system configurations
 - Initialize Phase History table with current state as "Phase 0"
-- Commit migration: `git commit -m "Phase 0: Workflow Migration"`
+- Commit migration: `git commit -m "Phase 0: Enhanced Workflow Migration"`
 
 ### Step 4: Resume Development
 - Use enhanced system prompt for next Cursor session
 - Continue development with hierarchical phase structure
+- Experience non-blocking interactions and automatic archiving
 
 ## Troubleshooting
 
 ### Common Issues
-- **AI not following phases**: Ensure system prompt includes all required elements
+- **AI not following phases**: Ensure system prompt includes all enhanced elements
 - **Git commits failing**: Check branch permissions and commit message format
-- **Log bloat**: Verify RULE_LOG_ROTATE_01 is functioning (should auto-trigger at 5K chars)
-- **Missing context**: Check GitSHA references in Phase History table
+- **Log bloat**: Archive system should auto-trigger (check RULE_ARCHIVE_SIZE_CHECK)
+- **Missing context**: Check archive references and GitSHA tracking
+- **Stuck on user input**: Check pending interactions table for responses
+
+### Interaction System Issues
+- **Interactions not processed**: Verify RULE_CHECK_INTERACTIONS is running
+- **Timeout issues**: Adjust timeout settings in project-settings.md
+- **Response format errors**: Use clear, simple responses (approve/reject/modify)
+- **Multiple pending interactions**: Prioritize by importance, AI will handle sequencing
+
+### Archive System Issues
+- **Archive failures**: Check .cursor/archive directory permissions
+- **Context recovery issues**: Verify archive integrity and references
+- **Performance problems**: Check if archiving thresholds need adjustment
+- **Missing archived content**: Check archive index for references
 
 ### System Recovery
-- **Lost workflow state**: Restore from Git history using stored GitSHAs
-- **Corrupted logs**: Check `## ArchiveLog` for preserved insights
-- **Phase confusion**: Reset to last validated phase using Git checkout
+- **Lost workflow state**: Restore from Git history using stored GitSHAs or archive references
+- **Corrupted interactions**: Check interaction history in archived files
+- **Archive corruption**: Use recovery scripts in .cursor/recovery-scripts/
+- **Phase confusion**: Reset to last validated phase using Git checkout or archive recovery
 
-This enhanced system provides robust, scalable AI-assisted development with persistent memory, quality assurance, and systematic progression through complex projects.
+This enhanced system provides robust, scalable AI-assisted development with persistent memory, non-blocking user interactions, automatic file management, quality assurance, and systematic progression through complex projects of any size.
