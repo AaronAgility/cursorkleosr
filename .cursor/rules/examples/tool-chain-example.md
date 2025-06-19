@@ -37,7 +37,7 @@ Here's how the AI would execute a complete phase with user input, using all avai
 
 **-- NEED USER INPUT: Should we commit this phase? --**
 
-11. **Tool 11**: `run_terminal_cmd` - Execute: `.cursor/user-input-capture.sh "Phase 3: Component Implementation completed. Ready to commit? (approve/reject)" 300 "approve" "Continue"`
+11. **Tool 11**: `run_terminal_cmd` - Execute: `.cursor/tools/user-input-capture/user-input-capture.sh "Phase 3: Component Implementation completed. Ready to commit? (approve/reject)" 300 "approve" "Continue"`
 12. **Tool 12**: `read_file` - Read user response from `.cursor/user_response.txt`
 
 **-- PROCESS RESPONSE AND CONTINUE --**
@@ -143,7 +143,7 @@ choice_selection:
 ### Advanced Tool Chain with Multiple Inputs:
 ```bash
 # Tool 10: Get commit approval
-run_terminal_cmd: .cursor/user-input-capture.sh "Commit Phase 3?" 300 "approve" "Continue"
+run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Commit Phase 3?" 300 "approve" "Continue"
 
 # Tool 11: Read commit response
 read_file: .cursor/user_response.txt
@@ -152,7 +152,7 @@ read_file: .cursor/user_response.txt
 run_terminal_cmd: git commit -m "Phase 3: Component Implementation"
 
 # Tool 15: Get next phase direction
-run_terminal_cmd: .cursor/user-input-capture.sh "Next: API or Database? (api/db)" 180 "api" "Continue"
+run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Next: API or Database? (api/db)" 180 "api" "Continue"
 
 # Tool 16: Read direction response  
 read_file: .cursor/user_response.txt

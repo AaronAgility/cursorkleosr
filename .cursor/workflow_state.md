@@ -54,7 +54,7 @@ Phase X: [Phase Name]
 Trigger: Phase tasks completed
 Actions:
   - Update workflow_state.md
-  - Use commit-with-approval.sh for git commits
+  - Use .cursor/tools/user-input-capture/commit-with-approval.sh for git commits
   - Record actual GitSHA in workflow state
   - Update phase counter
 ```
@@ -63,7 +63,7 @@ Actions:
 ```yaml
 Trigger: Commit or major decision required
 Actions:
-  - Use user-input-capture.sh for non-breaking input
+  - Use .cursor/tools/user-input-capture/user-input-capture.sh for non-breaking input
   - Apply timeout defaults from .cursorrules
   - Continue workflow based on response
   - Log all interactions
@@ -174,7 +174,7 @@ Feature Implementation:
 
 1. **Start New Project**: Update the "Current Work" section with your project objectives
 2. **Define Phases**: Replace template phases with your specific project phases  
-3. **Track Progress**: Use the commit-with-approval.sh script for proper git integration
+3. **Track Progress**: Use the .cursor/tools/user-input-capture/commit-with-approval.sh script for proper git integration
 4. **Maintain State**: Update counters and status as work progresses
 5. **Archive Completed**: Use the archiving system for completed phases
 
@@ -186,8 +186,8 @@ Feature Implementation:
 - ✅ Non-breaking workflow support
 
 **🔧 Available Tools:**
-- `.cursor/tools/user-input-capture.sh` - Non-breaking user input
-- `.cursor/tools/commit-with-approval.sh` - Commit approval workflow
+- `.cursor/tools/user-input-capture/user-input-capture.sh` - Non-breaking user input
+- `.cursor/tools/user-input-capture/commit-with-approval.sh` - Commit approval workflow
 - `.cursor/rules/project-settings.md` - Project configuration
 - `.cursor/libs/` - SDK documentation and examples
 

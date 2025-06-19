@@ -28,7 +28,7 @@ flowchart TD
 ### Implementation
 ```bash
 # Tool N: Capture user input
-run_terminal_cmd: .cursor/user-input-capture.sh "prompt message" [timeout] [default]
+run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "prompt message" [timeout] [default]
 
 # Tool N+1: Read response and continue
 read_file: .cursor/user_response.txt
@@ -39,7 +39,7 @@ read_file: .cursor/user_response.txt
 #### Commit Approval
 ```bash
 # AI executes via run_terminal_cmd:
-.cursor/user-input-capture.sh "Phase 3: User Auth completed. Ready to commit? (approve/reject)" 300 "approve"
+.cursor/tools/user-input-capture/user-input-capture.sh "Phase 3: User Auth completed. Ready to commit? (approve/reject)" 300 "approve"
 
 # AI continues tool chain by reading response:
 # Response file contains: "approve" or "reject"
@@ -48,7 +48,7 @@ read_file: .cursor/user_response.txt
 #### Choice Selection
 ```bash
 # AI executes:
-.cursor/user-input-capture.sh "Next phase focus: API or Database? (api/db)" 180 "api"
+.cursor/tools/user-input-capture/user-input-capture.sh "Next phase focus: API or Database? (api/db)" 180 "api"
 
 # AI reads response and continues with chosen direction
 ```
@@ -56,7 +56,7 @@ read_file: .cursor/user_response.txt
 #### Modification Requests
 ```bash
 # AI executes:
-.cursor/user-input-capture.sh "Code review needed. Issues found: security, performance. Fix which first? (security/performance/both)" 240 "both"
+.cursor/tools/user-input-capture/user-input-capture.sh "Code review needed. Issues found: security, performance. Fix which first? (security/performance/both)" 240 "both"
 ```
 
 ### Configuration
@@ -148,7 +148,7 @@ flowchart TD
 edit_file: update final component
 
 # Tool 19: Get immediate commit approval (non-breaking)
-run_terminal_cmd: .cursor/user-input-capture.sh "Phase 3 completed. Commit now?" 300 "approve"
+run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Phase 3 completed. Commit now?" 300 "approve"
 
 # Tool 20: Read response and continue
 read_file: .cursor/user_response.txt
@@ -167,7 +167,7 @@ read_file: .cursor/user_response.txt
 ### Example 3: Multiple Inputs in One Tool Chain
 ```bash
 # Tool 10: Get commit approval
-run_terminal_cmd: .cursor/user-input-capture.sh "Commit Phase 3?" 300 "approve"
+run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Commit Phase 3?" 300 "approve"
 
 # Tool 11: Read commit response
 read_file: .cursor/user_response.txt
@@ -176,7 +176,7 @@ read_file: .cursor/user_response.txt
 run_terminal_cmd: git commit -m "Phase 3: Component Implementation"
 
 # Tool 15: Get next phase direction
-run_terminal_cmd: .cursor/user-input-capture.sh "Next: API or Database? (api/db)" 180 "api"
+run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Next: API or Database? (api/db)" 180 "api"
 
 # Tool 16: Read direction response  
 read_file: .cursor/user_response.txt

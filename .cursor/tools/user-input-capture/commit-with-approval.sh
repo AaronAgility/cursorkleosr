@@ -9,7 +9,7 @@ set -e
 COMMIT_MESSAGE="$1"
 TIMEOUT="${2:-300}"  # 5 minutes default from .cursorrules
 BRANCH="${3:-main}"
-RESPONSE_FILE=".cursor/commit_response.txt"
+RESPONSE_FILE=".cursor/tools/user-input-capture/commit_response.txt"
 
 # Colors for better visibility
 RED='\033[0;31m'
@@ -55,7 +55,7 @@ PROMPT="Do you approve this commit? (yes/no/message)"
 DEFAULT_RESPONSE="reject"   # From .cursorrules commit_approval default
 TIMEOUT_ACTION="Continue"   # From .cursorrules commit_approval timeout_action
 
-.cursor/tools/user-input-capture.sh "$PROMPT" "$TIMEOUT" "$DEFAULT_RESPONSE" "$TIMEOUT_ACTION" "$RESPONSE_FILE"
+.cursor/tools/user-input-capture/user-input-capture.sh "$PROMPT" "$TIMEOUT" "$DEFAULT_RESPONSE" "$TIMEOUT_ACTION" "$RESPONSE_FILE"
 
 # Read the response
 if [ ! -f "$RESPONSE_FILE" ]; then
@@ -87,8 +87,8 @@ case "$RESPONSE" in
         echo -e "${GREEN}Message:${NC} $COMMIT_MESSAGE"
         
         # Save commit info for workflow tracking
-        echo "$COMMIT_SHA" > .cursor/last_commit_sha.txt
-        echo "$COMMIT_MESSAGE" > .cursor/last_commit_message.txt
+        echo "$COMMIT_SHA" > .cursor/tools/user-input-capture/last_commit_sha.txt
+        echo "$COMMIT_MESSAGE" > .cursor/tools/user-input-capture/last_commit_message.txt
         
         echo ""
         echo -e "${BLUE}============================================${NC}"
@@ -98,7 +98,7 @@ case "$RESPONSE" in
     "no"|"reject"|"n"|"timeout_continue"|"default_timeout_response")
         echo -e "${YELLOW}Commit rejected (user response or timeout).${NC}"
         echo -e "${YELLOW}Workflow will continue without committing.${NC}"
-        echo -e "${CYAN}To commit later, run: .cursor/tools/commit-with-approval.sh \"message\"${NC}"
+        echo -e "${CYAN}To commit later, run: .cursor/tools/user-input-capture/commit-with-approval.sh \"message\"${NC}"
         exit 1
         ;;
     "timeout_wait")
@@ -124,8 +124,8 @@ case "$RESPONSE" in
         echo -e "${GREEN}Message:${NC} $RESPONSE"
         
         # Save commit info for workflow tracking
-        echo "$COMMIT_SHA" > .cursor/last_commit_sha.txt
-        echo "$RESPONSE" > .cursor/last_commit_message.txt
+        echo "$COMMIT_SHA" > .cursor/tools/user-input-capture/last_commit_sha.txt
+        echo "$RESPONSE" > .cursor/tools/user-input-capture/last_commit_message.txt
         
         echo ""
         echo -e "${BLUE}============================================${NC}"
