@@ -1,1 +1,1 @@
-Test commit: Fix user-input-capture functionality
+Clean up workflow state: Reset to starter template

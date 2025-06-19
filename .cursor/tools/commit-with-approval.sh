@@ -52,7 +52,7 @@ echo ""
 
 # Use user-input-capture for approval
 PROMPT="Do you approve this commit? (yes/no/message)"
-DEFAULT_RESPONSE="approve"  # From .cursorrules commit_approval default
+DEFAULT_RESPONSE="reject"   # From .cursorrules commit_approval default
 TIMEOUT_ACTION="Continue"   # From .cursorrules commit_approval timeout_action
 
 .cursor/tools/user-input-capture.sh "$PROMPT" "$TIMEOUT" "$DEFAULT_RESPONSE" "$TIMEOUT_ACTION" "$RESPONSE_FILE"
@@ -70,7 +70,7 @@ echo ""
 echo -e "${CYAN}Processing response:${NC} $RESPONSE"
 
 case "$RESPONSE" in
-    "yes"|"approve"|"y"|"timeout_continue"|"default_timeout_response")
+    "yes"|"approve"|"y")
         echo -e "${GREEN}Commit approved. Proceeding...${NC}"
         
         # Add all changes
@@ -95,9 +95,10 @@ case "$RESPONSE" in
         echo -e "${BLUE}    COMMIT COMPLETED SUCCESSFULLY${NC}"
         echo -e "${BLUE}============================================${NC}"
         ;;
-    "no"|"reject"|"n")
-        echo -e "${YELLOW}Commit rejected by user.${NC}"
+    "no"|"reject"|"n"|"timeout_continue"|"default_timeout_response")
+        echo -e "${YELLOW}Commit rejected (user response or timeout).${NC}"
         echo -e "${YELLOW}Workflow will continue without committing.${NC}"
+        echo -e "${CYAN}To commit later, run: .cursor/tools/commit-with-approval.sh \"message\"${NC}"
         exit 1
         ;;
     "timeout_wait")

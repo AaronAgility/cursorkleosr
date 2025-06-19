@@ -23,7 +23,7 @@
 ```yaml
 commit_approval:
   timeout: 300
-  default: approve
+  default: reject
   timeout_action: Continue
   
 plan_approval:
