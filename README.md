@@ -67,373 +67,160 @@ This repository provides a specialized autonomous AI workflow system for buildin
 
 The Figma MCP (Model Context Protocol) integration enables seamless design-to-code workflows for Agility CMS projects, bridging the gap between design and development.
 
-### **Core Capabilities**
+## 🔧 **MCP Server Configuration**
 
-#### **Design Token Extraction**
-```typescript
-// Automatic extraction of design tokens from Figma
-interface FigmaDesignTokens {
-  colors: Record<string, string>;
-  typography: Record<string, TypographyToken>;
-  spacing: Record<string, string>;
-  breakpoints: Record<string, string>;
+### **Prerequisites**
+- Cursor IDE (latest version with MCP support)
+- Figma account with API access
+- Playwright for testing (optional)
+
+### **Environment Setup**
+
+Create a `.env.local` file in your project root:
+
+```env
+# Figma Configuration
+FIGMA_ACCESS_TOKEN=your-figma-personal-access-token
+FIGMA_FILE_ID=your-figma-file-id
+FIGMA_TEAM_ID=your-figma-team-id
+
+# Agility CMS Configuration  
+AGILITY_GUID=your-agility-instance-guid
+AGILITY_API_KEY=your-agility-fetch-api-key
+AGILITY_SECURITY_KEY=your-agility-security-key
+AGILITY_LOCALE=en-us
+
+# Build Configuration
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+AGILITY_PREVIEW_URL=http://localhost:3000
+AGILITY_PRODUCTION_URL=https://your-production-site.com
+NODE_ENV=development
+
+# Optional: Playwright Configuration
+PLAYWRIGHT_BASE_URL=http://localhost:3000
+```
+
+### **Cursor MCP Configuration**
+
+Add MCP servers to your Cursor settings. Access **Cursor Settings > Features > Model Context Protocol**:
+
+#### **Figma MCP Server**
+```json
+{
+  "name": "figma",
+  "command": "npx",
+  "args": ["@figma-tools/mcp-server"],
+  "env": {
+    "FIGMA_ACCESS_TOKEN": "${FIGMA_ACCESS_TOKEN}"
+  }
 }
-
-// Integration with Tailwind CSS for Agility CMS projects
-const figmaTokens = await figmaMCP.extractDesignTokens(figmaFileId);
-const tailwindConfig = generateTailwindConfig(figmaTokens);
 ```
 
-#### **Component Generation**
-```typescript
-// Generate React components from Figma designs
-const componentCode = await figmaMCP.generateComponent({
-  figmaNodeId: 'component-id',
-  framework: 'nextjs',
-  agilityIntegration: true,
-  outputPath: './components/agility-modules/'
-});
-
-// Automatic AgilityPic integration for images
-const optimizedComponent = await figmaMCP.optimizeForAgility(componentCode, {
-  imageOptimization: true,
-  responsiveImages: true,
-  agilityPicComponent: true
-});
+#### **Playwright MCP Server** 
+```json
+{
+  "name": "playwright",
+  "command": "npx", 
+  "args": ["@playwright/mcp-server"],
+  "env": {
+    "PLAYWRIGHT_BASE_URL": "${NEXT_PUBLIC_SITE_URL}"
+  }
+}
 ```
 
-### **Workflow Integration**
+### **Alternative Configuration File**
 
-#### **Phase-Based Design Implementation**
-```yaml
-Phase 1: Design Analysis
-  - Extract design tokens from Figma
-  - Generate component structure
-  - Create Agility CMS content models
+Create `.cursor/mcp-servers.json` in your project:
 
-Phase 2: Component Development
-  - Generate base React components
-  - Integrate with Agility CMS data fetching
-  - Implement responsive design patterns
-
-Phase 3: Content Integration
-  - Map Figma components to Agility modules
-  - Configure dynamic content areas
-  - Implement preview mode support
-```
-
-#### **Asset Pipeline**
-```typescript
-// Automatic asset optimization for Agility CMS
-const assetPipeline = {
-  // Extract and optimize images from Figma
-  extractImages: async (figmaFileId: string) => {
-    const images = await figmaMCP.extractImages(figmaFileId);
-    return await Promise.all(images.map(img => 
-      optimizeForAgilityPic(img, {
-        formats: ['webp', 'avif', 'jpg'],
-        sizes: [320, 640, 768, 1024, 1280, 1920],
-        quality: 85
-      })
-    ));
-  },
-
-  // Generate responsive image configurations
-  generateImageConfigs: (images: OptimizedImage[]) => {
-    return images.map(img => ({
-      url: img.url,
-      width: img.width,
-      height: img.height,
-      alt: img.alt || '',
-      agilityPicProps: {
-        sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
-        priority: img.priority || false
+```json
+{
+  "mcpServers": {
+    "figma": {
+      "command": "npx",
+      "args": ["@figma-tools/mcp-server"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "${FIGMA_ACCESS_TOKEN}",
+        "FIGMA_FILE_ID": "${FIGMA_FILE_ID}",
+        "FIGMA_TEAM_ID": "${FIGMA_TEAM_ID}"
       }
-    }));
-  }
-};
-```
-
-### **Design System Synchronization**
-
-#### **Component Mapping**
-```typescript
-// Map Figma components to Agility modules
-const componentMapping = {
-  'HeroSection': {
-    figmaComponentId: 'hero-component-id',
-    agilityModule: 'Hero',
-    contentModel: {
-      title: 'text',
-      subtitle: 'text',
-      backgroundImage: 'media',
-      ctaButton: 'object'
-    }
-  },
-  'ContentBlock': {
-    figmaComponentId: 'content-block-id',
-    agilityModule: 'RichTextArea',
-    contentModel: {
-      content: 'html',
-      alignment: 'text'
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp-server"],
+      "env": {
+        "PLAYWRIGHT_BASE_URL": "${NEXT_PUBLIC_SITE_URL}",
+        "AGILITY_PREVIEW_URL": "${NEXT_PUBLIC_SITE_URL}",
+        "AGILITY_PRODUCTION_URL": "${AGILITY_PRODUCTION_URL}"
+      }
     }
   }
-};
-
-// Automatic component updates
-await figmaMCP.syncComponents(componentMapping, {
-  updateOnDesignChange: true,
-  preserveContentLogic: true,
-  generatePropTypes: true
-});
+}
 ```
 
 ---
 
-## 🧪 Playwright MCP Integration
+## 🎨 **Figma Design Integration**
 
-Playwright MCP integration provides comprehensive testing capabilities specifically designed for Agility CMS applications, ensuring content delivery, performance, and user experience quality.
+### **Getting Figma Access Token**
 
-### **Core Testing Capabilities**
+1. **Visit Figma Settings**: Go to [figma.com/settings](https://figma.com/settings)
+2. **Generate Token**: Scroll to "Personal Access Tokens" and create a new token
+3. **Set Permissions**: Ensure "File content" read access
+4. **Copy Token**: Add to your `.env.local` file
 
-## 🎨 Comprehensive Figma MCP Integration
+### **Finding Your Figma File ID**
 
-The Figma MCP (Model Context Protocol) integration enables seamless design-to-code workflows for Agility CMS projects, bridging the gap between design and development with automated component generation and asset optimization.
+Extract from Figma URL:
+```
+https://www.figma.com/file/FILE_ID/Your-Design-Name
+                            ^^^^^^^^
+```
 
 ### **Design Token Extraction**
-```typescript
-// Automatic extraction of design tokens from Figma
-interface FigmaDesignTokens {
-  colors: Record<string, string>;
-  typography: Record<string, TypographyToken>;
-  spacing: Record<string, string>;
-  breakpoints: Record<string, string>;
-}
 
-// Integration with Tailwind CSS for Agility CMS projects
-const figmaTokens = await figmaMCP.extractDesignTokens(figmaFileId);
-const tailwindConfig = generateTailwindConfig(figmaTokens);
+Once MCP is configured, you can use natural language with Cursor:
+
+```
+"Extract design tokens from the Figma file and generate a Tailwind config"
+
+"Generate React components from the hero section in Figma"
+
+"Create AgilityPic-optimized components from the gallery design"
 ```
 
-### **Component Generation**
-```typescript
-// Generate React components from Figma designs
-const componentCode = await figmaMCP.generateComponent({
-  figmaNodeId: 'component-id',
-  framework: 'nextjs',
-  agilityIntegration: true,
-  outputPath: './components/agility-modules/'
-});
+### **Component Generation Workflow**
 
-// Automatic AgilityPic integration for images
-const optimizedComponent = await figmaMCP.optimizeForAgility(componentCode, {
-  imageOptimization: true,
-  responsiveImages: true,
-  agilityPicComponent: true
-});
-```
-
-### **Asset Pipeline**
-```typescript
-// Automatic asset optimization for Agility CMS
-const assetPipeline = {
-  // Extract and optimize images from Figma
-  extractImages: async (figmaFileId: string) => {
-    const images = await figmaMCP.extractImages(figmaFileId);
-    return await Promise.all(images.map(img => 
-      optimizeForAgilityPic(img, {
-        formats: ['webp', 'avif', 'jpg'],
-        sizes: [320, 640, 768, 1024, 1280, 1920],
-        quality: 85
-      })
-    ));
-  },
-
-  // Generate responsive image configurations
-  generateImageConfigs: (images: OptimizedImage[]) => {
-    return images.map(img => ({
-      url: img.url,
-      width: img.width,
-      height: img.height,
-      alt: img.alt || '',
-      agilityPicProps: {
-        sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
-        priority: img.priority || false
-      }
-    }));
-  }
-};
-```
-
-### **Component Mapping**
-```typescript
-// Map Figma components to Agility modules
-const componentMapping = {
-  'HeroSection': {
-    figmaComponentId: 'hero-component-id',
-    agilityModule: 'Hero',
-    contentModel: {
-      title: 'text',
-      subtitle: 'text',
-      backgroundImage: 'media',
-      ctaButton: 'object'
-    }
-  },
-  'ContentBlock': {
-    figmaComponentId: 'content-block-id',
-    agilityModule: 'RichTextArea',
-    contentModel: {
-      content: 'html',
-      alignment: 'text'
-    }
-  }
-};
-
-// Automatic component updates
-await figmaMCP.syncComponents(componentMapping, {
-  updateOnDesignChange: true,
-  preserveContentLogic: true,
-  generatePropTypes: true
-});
-```
+The AI will automatically:
+- Extract design tokens (colors, typography, spacing)
+- Generate React components with proper TypeScript
+- Integrate with Agility CMS data fetching patterns
+- Optimize images for AgilityPic component
+- Create responsive designs with Tailwind CSS
 
 ---
 
-## 🧪 Comprehensive Playwright MCP Integration
+## 🧪 **Playwright Testing Integration**
 
-Playwright MCP integration provides comprehensive testing capabilities specifically designed for Agility CMS applications, ensuring content delivery, performance, and user experience quality.
+### **Test Environment Setup**
 
-### **Content Validation Testing**
+Create `playwright.config.ts`:
+
 ```typescript
-// Test Agility CMS content fetching and rendering
-import { test, expect } from '@playwright/test';
-
-test.describe('Agility CMS Content Tests', () => {
-  test('should render dynamic content correctly', async ({ page }) => {
-    await page.goto('/blog');
-    
-    // Test content list rendering
-    const blogPosts = await page.locator('[data-agility-content="posts"]');
-    await expect(blogPosts).toBeVisible();
-    
-    // Validate content structure
-    const firstPost = blogPosts.first();
-    await expect(firstPost.locator('h2')).toBeVisible();
-    await expect(firstPost.locator('[data-agility-field="excerpt"]')).toBeVisible();
-  });
-
-  test('should handle content updates in preview mode', async ({ page }) => {
-    // Test preview mode functionality
-    await page.goto('/api/preview?secret=preview-secret&slug=/test-page');
-    await expect(page.locator('[data-agility-preview="true"]')).toBeVisible();
-  });
-});
-```
-
-### **Performance Testing**
-```typescript
-// Automated performance audits for Agility CMS sites
-test.describe('Performance Tests', () => {
-  test('should meet Core Web Vitals thresholds', async ({ page }) => {
-    await page.goto('/');
-    
-    // Measure and validate Core Web Vitals
-    const vitals = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        import('web-vitals').then(({ getCLS, getFID, getLCP }) => {
-          const vitals = {};
-          getCLS((metric) => vitals.cls = metric.value);
-          getFID((metric) => vitals.fid = metric.value);
-          getLCP((metric) => {
-            vitals.lcp = metric.value;
-            resolve(vitals);
-          });
-        });
-      });
-    });
-    
-    expect(vitals.cls).toBeLessThan(0.1);
-    expect(vitals.fid).toBeLessThan(100);
-    expect(vitals.lcp).toBeLessThan(2500);
-  });
-
-  test('should optimize AgilityPic image loading', async ({ page }) => {
-    await page.goto('/gallery');
-    
-    // Test image optimization
-    const images = await page.locator('img[data-agility-pic]');
-    const imageCount = await images.count();
-    
-    for (let i = 0; i < imageCount; i++) {
-      const img = images.nth(i);
-      await expect(img).toHaveAttribute('loading', 'lazy');
-      await expect(img).toHaveAttribute('decoding', 'async');
-    }
-  });
-});
-```
-
-### **Visual Regression Testing**
-```typescript
-// Screenshot comparison for design consistency
-test.describe('Visual Regression Tests', () => {
-  test('should maintain visual consistency across deployments', async ({ page }) => {
-    await page.goto('/');
-    
-    // Full page screenshot
-    await expect(page).toHaveScreenshot('homepage.png', {
-      fullPage: true,
-      threshold: 0.2
-    });
-  });
-
-  test('should render Agility modules consistently', async ({ page }) => {
-    await page.goto('/components-showcase');
-    
-    // Test individual module rendering
-    const modules = await page.locator('[data-agility-module]');
-    const moduleCount = await modules.count();
-    
-    for (let i = 0; i < moduleCount; i++) {
-      const module = modules.nth(i);
-      const moduleName = await module.getAttribute('data-agility-module');
-      
-      await expect(module).toHaveScreenshot(`module-${moduleName}.png`, {
-        threshold: 0.1
-      });
-    }
-  });
-});
-```
-
-### **Multi-language Testing**
-```typescript
-// Test multi-language content switching
-test.describe('Multi-language Support', () => {
-  ['en-us', 'fr-ca', 'es-mx'].forEach(locale => {
-    test(`should render content in ${locale}`, async ({ page }) => {
-      await page.goto(`/${locale}`);
-      
-      // Validate locale-specific content
-      const htmlLang = await page.getAttribute('html', 'lang');
-      expect(htmlLang).toBe(locale);
-      
-      // Test navigation in correct language
-      const navigation = await page.locator('[data-agility-nav]');
-      await expect(navigation).toBeVisible();
-    });
-  });
-});
-```
-
-### **CI/CD Integration**
-```typescript
-// Playwright configuration for Agility CMS projects
-// playwright.config.ts
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+  
+  use: {
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+    trace: 'on-first-retry',
+  },
+
   projects: [
     {
       name: 'agility-content-tests',
@@ -443,417 +230,175 @@ export default defineConfig({
       }
     },
     {
-      name: 'agility-performance-tests',
+      name: 'agility-performance-tests', 
       testMatch: '**/performance/*.spec.ts',
       use: {
-        baseURL: process.env.AGILITY_PRODUCTION_URL,
+        baseURL: process.env.AGILITY_PRODUCTION_URL || 'http://localhost:3000',
       }
     },
     {
       name: 'agility-visual-tests',
       testMatch: '**/visual/*.spec.ts',
-      use: {
-        baseURL: process.env.AGILITY_STAGING_URL,
-      }
     }
   ],
-  reporter: [
-    ['html'],
-    ['json', { outputFile: 'test-results/agility-test-results.json' }]
-  ]
+
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  },
 });
 ```
 
----
+### **Automated Testing with MCP**
 
-## 🔄 **Enhanced MCP Workflow Integration**
+With Playwright MCP configured, use natural language:
 
-### **Workflow State Management with MCPs**
+```
+"Create tests for the blog listing page with Agility CMS content"
 
-The integration of Figma MCP and Playwright MCP enhances our workflow phases:
+"Generate performance tests for Core Web Vitals compliance"
 
-```yaml
-Enhanced Workflow Phases:
-  Phase 1: Design Analysis & Setup
-    - Figma design token extraction
-    - Component structure planning
-    - Test scenario definition
-    
-  Phase 2: Component Development
-    - Figma-to-code generation
-    - Agility CMS integration
-    - Initial test implementation
-    
-  Phase 3: Content Integration
-    - Dynamic content mapping
-    - Performance optimization
-    - Content validation testing
-    
-  Phase 4: Testing & Validation
-    - Comprehensive Playwright test suite
-    - Visual regression testing
-    - Performance auditing
-    
-  Phase 5: Deployment & Monitoring
-    - Production deployment
-    - Continuous testing setup
-    - Performance monitoring
+"Create visual regression tests for the hero component"
 ```
 
-### **Procedural Testing Rules**
+### **Test Categories**
 
-For Playwright MCP integration, we define procedural rules that guide automated testing:
-
-#### **Content Testing Procedures**
-```yaml
-Content_Testing_Rules:
-  Rule_CT_01: "Test all dynamic content rendering"
-    - Verify content lists display correctly
-    - Validate individual content items
-    - Check content relationships and references
-    
-  Rule_CT_02: "Validate preview mode functionality"
-    - Test preview URL generation
-    - Verify preview content updates
-    - Check preview security and access control
-    
-  Rule_CT_03: "Test multi-language content switching"
-    - Validate locale-specific content
-    - Test language navigation
-    - Check URL structure for different locales
-```
-
-#### **Performance Testing Procedures**
-```yaml
-Performance_Testing_Rules:
-  Rule_PT_01: "Core Web Vitals compliance"
-    - LCP (Largest Contentful Paint) < 2.5s
-    - FID (First Input Delay) < 100ms
-    - CLS (Cumulative Layout Shift) < 0.1
-    
-  Rule_PT_02: "Image optimization validation"
-    - Test AgilityPic lazy loading
-    - Verify responsive image formats
-    - Check image compression ratios
-    
-  Rule_PT_03: "Caching strategy verification"
-    - Test static asset caching
-    - Verify API response caching
-    - Check ISR (Incremental Static Regeneration) behavior
-```
-
-#### **Visual Testing Procedures**
-```yaml
-Visual_Testing_Rules:
-  Rule_VT_01: "Component consistency"
-    - Screenshot comparison for all modules
-    - Cross-browser compatibility testing
-    - Responsive design validation
-    
-  Rule_VT_02: "Design system compliance"
-    - Typography consistency
-    - Color palette adherence
-    - Spacing and layout validation
-    
-  Rule_VT_03: "Content layout stability"
-    - Dynamic content layout testing
-    - CMS content overflow handling
-    - Mobile responsiveness validation
-```
-
-### **Tool Integration Commands**
-
-```bash
-# Figma MCP Commands
-npm run figma:extract-tokens      # Extract design tokens
-npm run figma:generate-components # Generate React components
-npm run figma:sync-assets        # Sync and optimize assets
-npm run figma:update-components  # Update existing components
-
-# Playwright MCP Commands
-npm run test:content             # Content validation tests
-npm run test:performance         # Performance audits
-npm run test:visual              # Visual regression tests
-npm run test:agility            # Full Agility CMS test suite
-npm run test:ci                  # CI/CD optimized test suite
-
-# Combined Workflow Commands
-npm run workflow:design-to-code  # Full Figma to code pipeline
-npm run workflow:test-deploy     # Test and deploy pipeline
-npm run workflow:validate-all    # Complete validation suite
-```
-
-#### **Content Validation Testing**
+#### **Content Validation Tests**
 ```typescript
-// Test Agility CMS content fetching and rendering
-import { test, expect } from '@playwright/test';
-
-test.describe('Agility CMS Content Tests', () => {
-  test('should render dynamic content correctly', async ({ page }) => {
-    await page.goto('/blog');
-    
-    // Test content list rendering
-    const blogPosts = await page.locator('[data-agility-content="posts"]');
-    await expect(blogPosts).toBeVisible();
-    
-    // Validate content structure
-    const firstPost = blogPosts.first();
-    await expect(firstPost.locator('h2')).toBeVisible();
-    await expect(firstPost.locator('[data-agility-field="excerpt"]')).toBeVisible();
-  });
-
-  test('should handle content updates in preview mode', async ({ page }) => {
-    // Test preview mode functionality
-    await page.goto('/api/preview?secret=preview-secret&slug=/test-page');
-    await expect(page.locator('[data-agility-preview="true"]')).toBeVisible();
-  });
-});
-```
-
-#### **Performance Testing**
-```typescript
-// Automated performance audits for Agility CMS sites
-test.describe('Performance Tests', () => {
-  test('should meet Core Web Vitals thresholds', async ({ page }) => {
-    await page.goto('/');
-    
-    // Measure and validate Core Web Vitals
-    const vitals = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        import('web-vitals').then(({ getCLS, getFID, getLCP }) => {
-          const vitals = {};
-          getCLS((metric) => vitals.cls = metric.value);
-          getFID((metric) => vitals.fid = metric.value);
-          getLCP((metric) => {
-            vitals.lcp = metric.value;
-            resolve(vitals);
-          });
-        });
-      });
-    });
-    
-    expect(vitals.cls).toBeLessThan(0.1);
-    expect(vitals.fid).toBeLessThan(100);
-    expect(vitals.lcp).toBeLessThan(2500);
-  });
-
-  test('should optimize AgilityPic image loading', async ({ page }) => {
-    await page.goto('/gallery');
-    
-    // Test image optimization
-    const images = await page.locator('img[data-agility-pic]');
-    const imageCount = await images.count();
-    
-    for (let i = 0; i < imageCount; i++) {
-      const img = images.nth(i);
-      await expect(img).toHaveAttribute('loading', 'lazy');
-      await expect(img).toHaveAttribute('decoding', 'async');
-    }
-  });
-});
-```
-
-#### **Visual Regression Testing**
-```typescript
-// Screenshot comparison for design consistency
-test.describe('Visual Regression Tests', () => {
-  test('should maintain visual consistency across deployments', async ({ page }) => {
-    await page.goto('/');
-    
-    // Full page screenshot
-    await expect(page).toHaveScreenshot('homepage.png', {
-      fullPage: true,
-      threshold: 0.2
-    });
-  });
-
-  test('should render Agility modules consistently', async ({ page }) => {
-    await page.goto('/components-showcase');
-    
-    // Test individual module rendering
-    const modules = await page.locator('[data-agility-module]');
-    const moduleCount = await modules.count();
-    
-    for (let i = 0; i < moduleCount; i++) {
-      const module = modules.nth(i);
-      const moduleName = await module.getAttribute('data-agility-module');
-      
-      await expect(module).toHaveScreenshot(`module-${moduleName}.png`, {
-        threshold: 0.1
-      });
-    }
-  });
-});
-```
-
-### **Workflow Integration with Testing**
-
-#### **Automated Testing Phases**
-```yaml
-Testing Workflow:
-  Phase 1: Content Validation
-    - Test content fetching from Agility CMS
-    - Validate dynamic routing
-    - Check preview mode functionality
-    
-  Phase 2: Performance Auditing
-    - Core Web Vitals measurement
-    - Image optimization validation
-    - Caching strategy verification
-    
-  Phase 3: Visual Regression
-    - Component screenshot comparison
-    - Cross-browser compatibility
-    - Responsive design validation
-    
-  Phase 4: Integration Testing
-    - Form submissions to Agility
-    - Search functionality
-    - Multi-language content switching
-```
-
-#### **CI/CD Integration**
-```typescript
-// Playwright configuration for Agility CMS projects
-// playwright.config.ts
-import { defineConfig } from '@playwright/test';
-
-export default defineConfig({
-  testDir: './tests',
-  projects: [
-    {
-      name: 'agility-content-tests',
-      testMatch: '**/content/*.spec.ts',
-      use: {
-        baseURL: process.env.AGILITY_PREVIEW_URL || 'http://localhost:3000',
-      }
-    },
-    {
-      name: 'agility-performance-tests',
-      testMatch: '**/performance/*.spec.ts',
-      use: {
-        baseURL: process.env.AGILITY_PRODUCTION_URL,
-      }
-    },
-    {
-      name: 'agility-visual-tests',
-      testMatch: '**/visual/*.spec.ts',
-      use: {
-        baseURL: process.env.AGILITY_STAGING_URL,
-      }
-    }
-  ],
-  reporter: [
-    ['html'],
-    ['json', { outputFile: 'test-results/agility-test-results.json' }]
-  ]
-});
-```
-
-### **Content-Specific Testing Patterns**
-
-#### **Dynamic Content Testing**
-```typescript
-// Test dynamic content rendering based on Agility CMS data
-test('should render content based on Agility CMS data structure', async ({ page }) => {
-  // Mock Agility CMS API responses for consistent testing
-  await page.route('**/api.aglty.io/**', async route => {
-    const mockResponse = {
-      items: [
-        {
-          contentID: 123,
-          properties: { state: 2, modified: '2024-12-19' },
-          fields: {
-            title: 'Test Blog Post',
-            content: '<p>Test content</p>',
-            featuredImage: {
-              url: 'https://cdn.aglty.io/test-image.jpg',
-              label: 'Test Image'
-            }
-          }
-        }
-      ]
-    };
-    await route.fulfill({ json: mockResponse });
-  });
-
+// Example generated by MCP
+test('should render blog posts from Agility CMS', async ({ page }) => {
   await page.goto('/blog');
-  await expect(page.locator('h1')).toContainText('Test Blog Post');
+  
+  const blogPosts = await page.locator('[data-agility-content="posts"]');
+  await expect(blogPosts).toBeVisible();
+  
+  const firstPost = blogPosts.first();
+  await expect(firstPost.locator('h2')).toBeVisible();
 });
 ```
 
-#### **Multi-language Testing**
+#### **Performance Tests**
 ```typescript
-// Test multi-language content switching
-test.describe('Multi-language Support', () => {
-  ['en-us', 'fr-ca', 'es-mx'].forEach(locale => {
-    test(`should render content in ${locale}`, async ({ page }) => {
-      await page.goto(`/${locale}`);
-      
-      // Validate locale-specific content
-      const htmlLang = await page.getAttribute('html', 'lang');
-      expect(htmlLang).toBe(locale);
-      
-      // Test navigation in correct language
-      const navigation = await page.locator('[data-agility-nav]');
-      await expect(navigation).toBeVisible();
+// Example generated by MCP
+test('should meet Core Web Vitals', async ({ page }) => {
+  await page.goto('/');
+  
+  const vitals = await page.evaluate(() => {
+    return new Promise((resolve) => {
+      import('web-vitals').then(({ getLCP, getFID, getCLS }) => {
+        const metrics = {};
+        getLCP(metric => metrics.lcp = metric.value);
+        getFID(metric => metrics.fid = metric.value);
+        getCLS(metric => {
+          metrics.cls = metric.value;
+          resolve(metrics);
+        });
+      });
     });
   });
+  
+  expect(vitals.lcp).toBeLessThan(2500);
+  expect(vitals.fid).toBeLessThan(100);
+  expect(vitals.cls).toBeLessThan(0.1);
 });
 ```
 
 ---
 
-## 🔄 **MCP Workflow Integration**
+## 🔄 **Enhanced Workflow Integration**
 
-### **Enhanced Workflow State Management**
+### **MCP-Enhanced Development Phases**
 
-The integration of Figma MCP and Playwright MCP requires enhanced workflow state tracking:
+With MCP servers configured, your workflow becomes:
 
 ```yaml
-Enhanced Workflow Phases:
-  Phase 1: Design Analysis & Setup
-    - Figma design token extraction
-    - Component structure planning
-    - Test scenario definition
+Phase 1: Design Analysis & Setup
+  Tasks:
+    - "Extract design tokens from Figma file [FILE_ID]"
+    - "Analyze component structure and create implementation plan"
+    - "Set up test scenarios for key user flows"
     
-  Phase 2: Component Development
-    - Figma-to-code generation
-    - Agility CMS integration
-    - Initial test implementation
+Phase 2: Component Development
+  Tasks:
+    - "Generate React components from Figma designs"
+    - "Integrate components with Agility CMS data fetching"
+    - "Create responsive layouts with extracted design tokens"
     
-  Phase 3: Content Integration
-    - Dynamic content mapping
-    - Performance optimization
-    - Content validation testing
+Phase 3: Content Integration  
+  Tasks:
+    - "Map Figma components to Agility module definitions"
+    - "Implement dynamic content areas with proper TypeScript"
+    - "Set up preview mode and SEO optimization"
     
-  Phase 4: Testing & Validation
-    - Comprehensive Playwright test suite
-    - Visual regression testing
-    - Performance auditing
+Phase 4: Testing & Validation
+  Tasks:
+    - "Generate comprehensive test suite for content validation"
+    - "Create performance tests for Core Web Vitals compliance"
+    - "Set up visual regression tests for design consistency"
     
-  Phase 5: Deployment & Monitoring
-    - Production deployment
-    - Continuous testing setup
-    - Performance monitoring
+Phase 5: Deployment & Monitoring
+  Tasks:
+    - "Configure production deployment pipeline"
+    - "Set up continuous testing with Playwright"
+    - "Implement performance monitoring and alerts"
 ```
 
-### **Tool Integration Commands**
+### **Natural Language Commands**
 
+With both MCPs active, you can use commands like:
+
+- `"Extract the color palette from Figma and update our Tailwind config"`
+- `"Generate a React component for the hero section with Agility CMS integration"`
+- `"Create tests to validate the blog listing renders correctly"`
+- `"Generate performance tests for the entire site"`
+- `"Take screenshots of all components for visual regression testing"`
+
+---
+
+## 🚀 **Getting Started with MCP**
+
+### **1. Install Dependencies**
 ```bash
-# Figma MCP Commands
-npm run figma:extract-tokens     # Extract design tokens
-npm run figma:generate-components # Generate React components
-npm run figma:sync-assets        # Sync and optimize assets
-
-# Playwright MCP Commands
-npm run test:content            # Content validation tests
-npm run test:performance        # Performance audits
-npm run test:visual             # Visual regression tests
-npm run test:agility           # Full Agility CMS test suite
+npm install @playwright/test
+npm install -D @figma-tools/mcp-server @playwright/mcp-server
 ```
 
-This comprehensive integration transforms the development workflow into a fully automated, design-driven, and thoroughly tested process that ensures high-quality Agility CMS applications.
+### **2. Configure Environment Variables**
+Copy `.env.example` to `.env.local` and fill in your credentials.
+
+### **3. Set Up MCP Servers**
+Configure the MCP servers in Cursor settings or create `.cursor/mcp-servers.json`.
+
+### **4. Verify Setup**
+Ask Cursor: `"List available Figma files"` or `"Run a simple test to verify Playwright setup"`
+
+### **5. Start Development**
+Begin with: `"Extract design tokens from Figma and create the initial component structure"`
+
+---
+
+## 🎯 **Best Practices**
+
+### **Environment Security**
+- Never commit `.env.local` files
+- Use environment variables for all sensitive data
+- Rotate Figma tokens regularly
+- Use different tokens for development/production
+
+### **Design Workflow**
+- Keep Figma files organized with clear component naming
+- Use Figma's component variants for responsive designs  
+- Document design tokens in Figma for consistency
+- Create component libraries for reusable elements
+
+### **Testing Strategy**
+- Start with content validation tests
+- Add performance tests for critical pages
+- Use visual regression tests for design consistency
+- Set up CI/CD integration with test automation
+
+This approach provides a proper foundation for MCP integration with actual configuration steps and realistic usage patterns.
 
 ## Quick Start
 

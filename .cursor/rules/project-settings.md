@@ -231,24 +231,24 @@ Phase 5: Deployment & Monitoring
   - Performance monitoring
 ```
 
-### **Tool Integration Commands**
-```bash
-# Figma MCP Commands
-npm run figma:extract-tokens      # Extract design tokens
-npm run figma:generate-components # Generate React components
-npm run figma:sync-assets        # Sync and optimize assets
+### **MCP Integration Usage**
 
-# Playwright MCP Commands  
-npm run test:content             # Content validation tests
-npm run test:performance         # Performance audits
-npm run test:visual              # Visual regression tests
-npm run test:agility            # Full Agility CMS test suite
+With Figma and Playwright MCPs configured in Cursor, use natural language commands:
 
-# Combined Workflow Commands
-npm run workflow:design-to-code  # Full Figma to code pipeline
-npm run workflow:test-deploy     # Test and deploy pipeline
-npm run workflow:validate-all    # Complete validation suite
-```
+**Figma Design Integration:**
+- `"Extract design tokens from the Figma file and generate a Tailwind config"`
+- `"Generate React components from the hero section in Figma"`
+- `"Create AgilityPic-optimized components from the gallery design"`
+
+**Playwright Testing:**
+- `"Create tests for the blog listing page with Agility CMS content"`
+- `"Generate performance tests for Core Web Vitals compliance"`
+- `"Create visual regression tests for the hero component"`
+
+**Combined Workflows:**
+- `"Extract Figma tokens, generate components, and create tests"`
+- `"Build complete design-to-code pipeline with testing"`
+- `"Validate entire application with comprehensive test suite"`
 
 ## Changelog
 <!-- The agent prepends the latest summary here as a new list item after each phase completion --> 
