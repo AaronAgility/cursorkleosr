@@ -1,170 +1,197 @@
+'use client';
+
 import { useState } from 'react';
+import { Monitor, Tablet, Smartphone, ExternalLink, RotateCcw, ChevronDown } from 'lucide-react';
 
-type DeviceType = 'desktop' | 'tablet' | 'mobile';
+interface DeviceType {
+  name: string;
+  icon: React.ComponentType<{ className?: string }>;
+  width: string;
+  height: string;
+}
 
-const DEVICES = {
-  desktop: { name: 'Desktop', width: '100%', height: '100%', icon: '🖥️' },
-  tablet: { name: 'Tablet', width: '768px', height: '1024px', icon: '📱' },
-  mobile: { name: 'Mobile', width: '375px', height: '667px', icon: '📱' },
-};
+const DEVICE_TYPES: DeviceType[] = [
+  { name: 'Desktop', icon: Monitor, width: '100%', height: '100%' },
+  { name: 'Tablet', icon: Tablet, width: '768px', height: '1024px' },
+  { name: 'Mobile', icon: Smartphone, width: '375px', height: '667px' }
+];
 
 export function PreviewPanel() {
-  const [selectedDevice, setSelectedDevice] = useState<DeviceType>('desktop');
   const [currentUrl, setCurrentUrl] = useState('http://localhost:3000');
   const [inputUrl, setInputUrl] = useState('http://localhost:3000');
+  const [deviceType, setDeviceType] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [showDeviceSelector, setShowDeviceSelector] = useState(false);
+
+  const currentDevice = DEVICE_TYPES[deviceType] ?? DEVICE_TYPES[0]!;
+  const DeviceIcon = currentDevice.icon;
 
   const handleUrlSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setCurrentUrl(inputUrl);
-    // Simulate loading time
-    setTimeout(() => setIsLoading(false), 800);
+    setTimeout(() => setIsLoading(false), 1000);
   };
 
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputUrl(e.target.value);
+  const handleQuickUrl = (url: string) => {
+    setInputUrl(url);
+    setCurrentUrl(url);
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 1000);
   };
 
-  const quickUrls = [
-    { name: 'Project', url: 'http://localhost:3000' },
-    { name: 'Docs', url: 'http://localhost:4001' },
-    { name: 'Storybook', url: 'http://localhost:6006' },
-  ];
+  const handleRefresh = () => {
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 1000);
+  };
+
+  const handleDeviceSelect = (index: number) => {
+    setDeviceType(index);
+    setShowDeviceSelector(false);
+  };
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Preview Header */}
-      <div className="bg-gray-800 border-b border-gray-700 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <h2 className="text-sm font-medium text-gray-300">Live Preview</h2>
-            <div className="flex items-center space-x-1">
-              <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-400 animate-pulse' : 'bg-green-400 animate-pulse'}`}></div>
-              <span className="text-xs text-gray-400">{isLoading ? 'Loading' : 'Live'}</span>
-            </div>
+    <div className="h-full flex flex-col bg-gradient-to-b from-gray-800 to-gray-900">
+      {/* Browser Chrome */}
+      <div className="bg-gray-700 border-b border-gray-600 p-3">
+        {/* URL Bar */}
+        <div className="flex items-center space-x-3">
+          <div className="flex space-x-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
           </div>
-
-          {/* Device Selector */}
-          <div className="flex items-center space-x-2">
-            {Object.entries(DEVICES).map(([key, device]) => (
-              <button
-                key={key}
-                onClick={() => setSelectedDevice(key as DeviceType)}
-                className={`px-3 py-1 rounded text-xs transition-colors ${
-                  selectedDevice === key
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
-                title={device.name}
-              >
-                {device.icon}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick URL Buttons */}
-        <div className="flex items-center space-x-2 mt-3">
-          <span className="text-xs text-gray-400">Quick:</span>
-          {quickUrls.map((item) => (
-            <button
-              key={item.name}
-              onClick={() => {
-                setInputUrl(item.url);
-                setCurrentUrl(item.url);
-                setIsLoading(true);
-              }}
-              className={`px-2 py-1 text-xs rounded transition-colors ${
-                currentUrl === item.url
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-              }`}
-            >
-              {item.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Preview Content */}
-      <div className="flex-1 bg-gray-900 flex items-center justify-center p-4">
-        <div
-          className="bg-white rounded-lg shadow-2xl overflow-hidden transition-all duration-300 relative"
-          style={{
-            width: DEVICES[selectedDevice].width,
-            height: DEVICES[selectedDevice].height,
-            maxWidth: '100%',
-            maxHeight: '100%',
-          }}
-        >
-          {/* Safari-style Browser Chrome */}
-          <div className="bg-gray-200 px-3 py-2 flex items-center space-x-2 border-b">
-            <div className="flex space-x-1">
-              <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-              <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-              <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-            </div>
-            
-            {/* Safari Address Bar */}
-            <form onSubmit={handleUrlSubmit} className="flex-1 flex items-center">
+          
+          <form onSubmit={handleUrlSubmit} className="flex-1 flex items-center space-x-2">
+            <div className="flex-1 relative">
               <input
-                type="url"
+                type="text"
                 value={inputUrl}
-                onChange={handleUrlChange}
-                className="flex-1 bg-white rounded-md px-3 py-1 text-xs text-gray-700 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                onChange={(e) => setInputUrl(e.target.value)}
+                className="w-full bg-gray-600 text-white px-4 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-gray-500"
                 placeholder="Enter URL..."
               />
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="ml-2 text-xs text-blue-600 hover:text-blue-800 disabled:opacity-50"
-              >
-                {isLoading ? '⏳' : '→'}
-              </button>
-            </form>
-          </div>
+            </div>
+            
+            <button
+              type="submit"
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+            >
+              Go →
+            </button>
+            
+            <button
+              type="button"
+              onClick={handleRefresh}
+              className="p-2 bg-gray-600 text-gray-300 rounded-lg hover:bg-gray-500 hover:text-white transition-colors"
+              title="Refresh"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+            
+            <a
+              href={currentUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 bg-gray-600 text-gray-300 rounded-lg hover:bg-gray-500 hover:text-white transition-colors"
+              title="Open in new tab"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </form>
+        </div>
+      </div>
 
-          {/* Preview Iframe/Content */}
-          <div className="w-full h-full bg-white relative">
-            {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
-                <div className="text-center text-gray-600">
-                  <div className="text-4xl mb-4 animate-spin">⏳</div>
-                  <h3 className="text-lg font-medium mb-2">Loading...</h3>
-                  <p className="text-sm text-gray-500">
-                    Connecting to {currentUrl}
-                  </p>
+      {/* Preview Container */}
+      <div className="flex-1 bg-gray-800 p-4 relative overflow-hidden">
+        <div className="h-full flex items-center justify-center">
+          <div 
+            className="bg-white rounded-lg shadow-2xl border border-gray-600 relative transition-all duration-300 ease-in-out"
+            style={{
+              width: currentDevice.width,
+              height: currentDevice.height,
+              maxWidth: '100%',
+              maxHeight: '100%'
+            }}
+          >
+            {isLoading ? (
+              <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-2"></div>
+                  <p className="text-gray-600 text-sm">Loading...</p>
                 </div>
               </div>
+            ) : (
+              <iframe
+                src={currentUrl}
+                className="w-full h-full rounded-lg"
+                title="Preview"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                onLoad={() => setIsLoading(false)}
+              />
             )}
-            
-            <iframe 
-              src={currentUrl} 
-              className="w-full h-full border-0"
-              title="Live Preview"
-              onLoad={() => setIsLoading(false)}
-              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
-            />
           </div>
         </div>
       </div>
 
-      {/* Preview Footer */}
-      <div className="h-10 bg-gray-800 border-t border-gray-700 flex items-center justify-between px-4 text-xs text-gray-400">
+      {/* Status Bar with Device Selector Dropdown */}
+      <div className="bg-gray-700 border-t border-gray-600 px-4 py-2 flex items-center justify-between text-sm text-gray-300 relative">
         <div className="flex items-center space-x-4">
-          <span>Device: {DEVICES[selectedDevice].name}</span>
-          <span>•</span>
-          <span>Resolution: {DEVICES[selectedDevice].width} × {DEVICES[selectedDevice].height}</span>
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          <span>URL: {currentUrl}</span>
-          <span>•</span>
-          <div className="flex items-center space-x-1">
-            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-            <span>Preview Mode</span>
+          {/* Device Selector Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setShowDeviceSelector(!showDeviceSelector)}
+              className="flex items-center space-x-2 hover:text-white transition-colors cursor-pointer"
+            >
+              <span>Device:</span>
+              <div className="flex items-center space-x-1">
+                <DeviceIcon className="w-4 h-4" />
+                <span className="font-medium">{currentDevice.name}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${showDeviceSelector ? 'rotate-180' : ''}`} />
+              </div>
+            </button>
+
+            {/* Dropdown Menu */}
+            {showDeviceSelector && (
+              <div className="absolute bottom-full left-0 mb-2 bg-gray-800 rounded-lg shadow-xl border border-gray-600 py-2 min-w-[200px] z-50">
+                {DEVICE_TYPES.map((device, index) => {
+                  const DeviceIconComponent = device.icon;
+                  return (
+                    <button
+                      key={device.name}
+                      onClick={() => handleDeviceSelect(index)}
+                      className={`w-full flex items-center space-x-3 px-4 py-2 text-left hover:bg-gray-700 transition-colors ${
+                        deviceType === index ? 'bg-gray-700 text-white' : 'text-gray-300'
+                      }`}
+                    >
+                      <DeviceIconComponent className="w-4 h-4" />
+                      <div className="flex-1">
+                        <div className="font-medium">{device.name}</div>
+                        <div className="text-xs opacity-75">
+                          {device.width} × {device.height}
+                        </div>
+                      </div>
+                      {deviceType === index && (
+                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
+          
+          <div className="flex items-center space-x-2">
+            <span>Resolution:</span>
+            <span className="font-medium">
+              {currentDevice.width === '100%' ? '100%' : currentDevice.width} × {currentDevice.height === '100%' ? '100%' : currentDevice.height}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+          <span>preview mode</span>
         </div>
       </div>
     </div>

@@ -1,0 +1,11 @@
+#turbo
+.turbo
+
+#node
+node_modules
+
+#next
+.next
+
+#env
+.env

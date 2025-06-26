@@ -1,5 +1,10 @@
+'use client';
+
 import { Message } from 'ai';
 import { FormEvent } from 'react';
+import { Sparkles, Send, Loader2 } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { DragDropOverlay } from './DragDropOverlay';
 
 interface ChatInterfaceProps {
   messages: Message[];
@@ -18,6 +23,79 @@ export function ChatInterface({
   isLoading,
   agentType,
 }: ChatInterfaceProps) {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [showDragOverlay, setShowDragOverlay] = useState(false);
+  const dragCounter = useRef(0);
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current++;
+    
+    if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
+      setShowDragOverlay(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current--;
+    
+    if (dragCounter.current === 0) {
+      setShowDragOverlay(false);
+      setIsDragOver(false);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
+      setIsDragOver(true);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setShowDragOverlay(false);
+    setIsDragOver(false);
+    dragCounter.current = 0;
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      await processFiles(files);
+    }
+  };
+
+  const processFiles = async (files: File[]) => {
+    // Process the dropped files
+    const fileDescriptions = files.map(file => {
+      const fileType = file.type || 'unknown';
+      const fileSize = (file.size / 1024 / 1024).toFixed(2);
+      
+      let category = 'Document';
+      if (fileType.startsWith('image/')) category = 'Image';
+      else if (fileType.includes('figma')) category = 'Figma Design';
+      else if (fileType.startsWith('text/') || fileType.includes('code')) category = 'Code File';
+      
+      return `${category}: ${file.name} (${fileSize}MB)`;
+    });
+
+    // Create a message about the uploaded files
+    const fileMessage = `I've uploaded ${files.length} file(s):\n${fileDescriptions.join('\n')}\n\nPlease analyze these files and help me work with them.`;
+    
+    // Simulate adding the message to input
+    const syntheticEvent = {
+      target: { value: fileMessage }
+    } as React.ChangeEvent<HTMLTextAreaElement>;
+    
+    handleInputChange(syntheticEvent);
+  };
+
   const formatMessage = (content: string) => {
     // Simple code block detection
     const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
@@ -62,16 +140,31 @@ export function ChatInterface({
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div 
+      className="flex-1 flex flex-col relative"
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
+      {/* Drag and Drop Overlay */}
+      <DragDropOverlay 
+        isVisible={showDragOverlay} 
+        isDragOver={isDragOver} 
+      />
+
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="text-center text-gray-400 mt-8">
-            <div className="text-4xl mb-4">🎯</div>
-            <h3 className="text-lg font-medium mb-2">Welcome to Kairo</h3>
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-white animate-pulse" />
+              </div>
+            </div>
+            <h3 className="text-lg font-medium mb-2 text-white">Welcome to Kairo</h3>
             <p className="text-sm">
-              Start a conversation with the orchestration agent.<br />
-              It will coordinate specialized agents to help build your project.
+              AI agents will coordinate to help build your project.
             </p>
             
             {/* Example prompts */}
@@ -79,16 +172,18 @@ export function ChatInterface({
               <p className="text-xs text-gray-500 mb-2">Try asking:</p>
               <div className="space-y-1 text-xs">
                 <div className="bg-gray-700 rounded px-3 py-2 text-left">
-                  "Build a modern landing page with a hero section and contact form"
+                  "Create a modern Agility CMS website with a hero section, blog listing, and contact form"
                 </div>
                 <div className="bg-gray-700 rounded px-3 py-2 text-left">
-                  "Create a React dashboard with charts and user management"
+                  "Build an Agility CMS admin dashboard with content management and analytics"
                 </div>
                 <div className="bg-gray-700 rounded px-3 py-2 text-left">
-                  "Help me optimize this app's performance and add responsive design"
+                  "Help me set up Agility CMS with Next.js and optimize performance for SEO"
                 </div>
               </div>
             </div>
+
+
           </div>
         ) : (
           messages.map((message) => {
@@ -153,11 +248,7 @@ export function ChatInterface({
           <div className="flex justify-start">
             <div className="bg-gray-700 text-gray-100 rounded-lg px-4 py-2 max-w-[85%]">
               <div className="flex items-center space-x-2">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                </div>
+                <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
                 <span className="text-sm text-gray-300">Orchestrating agents...</span>
               </div>
             </div>
@@ -185,18 +276,18 @@ export function ChatInterface({
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
           >
             {isLoading ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              'Send'
+              <Send className="w-4 h-4" />
             )}
           </button>
         </form>
         
         <div className="mt-2 text-xs text-gray-400">
-          Press Enter to send, Shift+Enter for new line
+          Press Enter to send, Shift+Enter for new line • Drag & drop files to analyze
         </div>
       </div>
     </div>

@@ -1,0 +1,10 @@
+{
+  "name": "kairo-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "cd kairo-platform && turbo dev",
+    "build": "cd kairo-platform && turbo build",
+    "lint": "cd kairo-platform && turbo lint"
+  },
+  "description": "Kairo Multi-Agent Development Platform - Root workspace"
+} 
