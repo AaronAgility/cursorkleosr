@@ -1,4 +1,5 @@
 # Kairo Multi-Agent Development Platform
+![Screenshot 2025-06-26 at 6 15 05 PM](https://github.com/user-attachments/assets/99a110fd-4373-4ffd-bf36-75773ad7f10a)
 
 > **Intelligent AI Agent Orchestration for Modern Development**
 
