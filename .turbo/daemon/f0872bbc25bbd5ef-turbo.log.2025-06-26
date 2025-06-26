@@ -1,0 +1,6 @@
+2025-06-26T04:09:02.384736Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-26T04:09:34.920059Z  WARN daemon_server:listen_socket{pid_path=AbsoluteSystemPath("/var/folders/dz/80h2kfvd7wq40tq9ndz8c5l00000gn/T/turbod/f0872bbc25bbd5ef/turbod.pid") sock_path=AbsoluteSystemPath("/var/folders/dz/80h2kfvd7wq40tq9ndz8c5l00000gn/T/turbod/f0872bbc25bbd5ef/turbod.sock") running=true}: pidlock: stale pid file at "/var/folders/dz/80h2kfvd7wq40tq9ndz8c5l00000gn/T/turbod/f0872bbc25bbd5ef/turbod.pid"    
+2025-06-26T04:10:09.287397Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-26T04:10:52.235498Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-26T04:11:31.270704Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-26T04:14:00.769976Z  WARN daemon_server:listen_socket{pid_path=AbsoluteSystemPath("/var/folders/dz/80h2kfvd7wq40tq9ndz8c5l00000gn/T/turbod/f0872bbc25bbd5ef/turbod.pid") sock_path=AbsoluteSystemPath("/var/folders/dz/80h2kfvd7wq40tq9ndz8c5l00000gn/T/turbod/f0872bbc25bbd5ef/turbod.sock") running=true}: pidlock: stale pid file at "/var/folders/dz/80h2kfvd7wq40tq9ndz8c5l00000gn/T/turbod/f0872bbc25bbd5ef/turbod.pid"    
