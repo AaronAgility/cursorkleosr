@@ -94,7 +94,7 @@ npm run lint          # Run linting
 
 Kairo can automatically detect and run test projects for enhanced development:
 
-- **Automatic Detection**: Checks for `VibeStage` or `kairo-test-project` in parent directory
+- **Automatic Detection**: Checks for `kairo-test-project` in parent directory
 - **Live Preview**: Shows your test project in the preview panel
 - **Dual Development**: Kairo interface + your project running simultaneously
 - **Fallback**: Works with any project running on `localhost:3000`

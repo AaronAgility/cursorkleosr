@@ -76,6 +76,98 @@ kairo/                    # Repository root
     └── DUAL-MODE-SETUP.md      # Detailed setup guide
 ```
 
+## 🤖 **Agent Architecture**
+
+Kairo uses a sophisticated multi-agent orchestration system where a Main Orchestration Agent coordinates with 9 specialized agents based on project configuration and user requests.
+
+### **Orchestration Flow**
+
+```mermaid
+graph TD
+    A[User Request] --> B[Main Orchestration Agent]
+    B --> C{Analyze Request}
+    C --> D[Project Settings]
+    C --> E[Agent Configuration]
+    
+    D --> F[orchestrationMode]
+    D --> G[enabledAgents]
+    D --> H[projectType]
+    D --> I[agentModels]
+    
+    E --> J[API Keys]
+    E --> K[Custom Prompts]
+    E --> L[SDK Rules]
+    
+    B --> M{Select Agents}
+    
+    M --> N[Design Agent<br/>UI/UX Design]
+    M --> O[Frontend Agent<br/>React/Next.js]
+    M --> P[Performance Agent<br/>Optimization]
+    M --> Q[Security Agent<br/>Security Review]
+    M --> R[Testing Agent<br/>Test Generation]
+    M --> S[Content Agent<br/>CMS Integration]
+    M --> T[Responsive Agent<br/>Mobile/Tablet]
+    M --> U[Deployment Agent<br/>CI/CD]
+    M --> V[Translation Agent<br/>i18n]
+    
+    N --> W[Coordinated Response]
+    O --> W
+    P --> W
+    Q --> W
+    R --> W
+    S --> W
+    T --> W
+    U --> W
+    V --> W
+    
+    W --> X[Action Items]
+    W --> Y[Next Steps]
+    W --> Z[Collaboration Requests]
+    
+    style B fill:#FFCB28,stroke:#1a1a1a,stroke-width:3px,color:#1a1a1a
+    style M fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    style W fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+```
+
+### **Configuration-Driven Orchestration**
+
+The orchestration system reads configuration from the project settings to determine:
+
+- **🎯 Agent Selection**: Which agents to activate based on `enabledAgents` array
+- **🧠 Model Assignment**: Which AI model each agent uses via `agentModels` mapping  
+- **⚙️ Orchestration Mode**: How agents collaborate (`intelligent`, `manual`, `sequential`)
+- **🔑 API Integration**: Provider credentials and SDK-specific rules
+- **📝 Custom Behavior**: Agent-specific prompts and instructions
+
+### **Agent Specializations**
+
+| Agent | Purpose | Key Capabilities |
+|-------|---------|------------------|
+| **Design** | UI/UX Design | Layout, styling, user experience optimization |
+| **Frontend** | React/Next.js Development | Component architecture, state management |
+| **Performance** | Speed & Optimization | Bundle analysis, performance monitoring |
+| **Security** | Security Review | Vulnerability scanning, secure coding practices |
+| **Testing** | Test Generation | Unit tests, integration tests, E2E scenarios |
+| **Content** | CMS Integration | Agility CMS setup, content modeling |
+| **Responsive** | Multi-device Support | Mobile-first design, responsive layouts |
+| **Deployment** | CI/CD Pipeline | Build optimization, deployment strategies |
+| **Translation** | Internationalization | Multi-language support, locale management |
+
+### **How It Works**
+
+1. **User Input**: You send a request through the Kairo UI
+2. **Orchestration**: The Main Agent analyzes your request and project configuration
+3. **Agent Selection**: Based on your `enabledAgents` and request type, relevant specialists are activated
+4. **Coordination**: Each agent contributes their expertise using their configured AI model
+5. **Response**: A unified response with action items, next steps, and collaboration requests
+
+The system is fully configurable through the Project Settings modal, allowing you to:
+- Enable/disable specific agents
+- Assign different AI models to different agents
+- Set custom prompts for specialized behavior
+- Configure API keys for different providers
+- Define SDK-specific rules and guidelines
+
 ## 🚀 **Getting Started**
 
 1. **Clone** the repository
@@ -102,15 +194,15 @@ Place any project with a `turbo dev --filter=web` command in the parent director
 ```bash
 # Your directory structure should look like:
 parent-directory/
-├── kairo/           # This repository
-├── kairo-test-project/     # Official test project (priority 1)
-└── VibeStage/             # Or any other project (priority 2)
+├── kairo/                     # This repository
+├── kairo-test-project/        # Official test project
+└── your-custom-project/       # Any other project with turbo dev support
 ```
 
 ### **Preview Behavior**
 - **With test project**: The preview panel loads your project on `localhost:3000`
 - **Without test project**: The preview panel shows whatever is running on `localhost:3000`
-- **Priority order**: VibeStage → kairo-test-project → any localhost:3000 content
+- **Priority order**: kairo-test-project → any localhost:3000 content
 
 ### **Desktop App Commands**
 ```bash
