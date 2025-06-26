@@ -1,13 +1,13 @@
 'use client';
 
-import { Message } from 'ai';
+import { UIMessage } from 'ai';
 import { FormEvent } from 'react';
 import { Sparkles, Send, Loader2 } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { DragDropOverlay } from './DragDropOverlay';
 
 interface ChatInterfaceProps {
-  messages: Message[];
+  messages: UIMessage[];
   input: string;
   handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
@@ -171,8 +171,14 @@ export function ChatInterface({
           </div>
         ) : (
           messages.map((message) => {
-            const messageParts = formatMessage(message.content);
-            const agentMentions = detectAgentResponse(message.content);
+            // Extract text content from message parts (AI SDK 5 Beta format)
+            const textContent = message.parts
+              ?.filter(part => part.type === 'text')
+              .map(part => part.text)
+              .join('') || '';
+            
+            const messageParts = formatMessage(textContent);
+            const agentMentions = detectAgentResponse(textContent);
             
             return (
               <div

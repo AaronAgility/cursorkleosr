@@ -10,13 +10,15 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/ui": "*",
-    "@kairo/agents": "*",
-    "ai": "^4.0.0",
     "@ai-sdk/anthropic": "^1.0.0",
     "@ai-sdk/azure": "^1.0.0",
     "@ai-sdk/google": "^1.0.0",
+    "@ai-sdk/openai": "^1.0.0",
+    "@ai-sdk/react": "^1.0.0",
     "@google/genai": "^1.7.0",
+    "@kairo/agents": "*",
+    "@repo/ui": "*",
+    "ai": "^4.0.0",
     "framer-motion": "^12.19.1",
     "lucide-react": "^0.523.0",
     "next": "15.0.0",
@@ -31,9 +33,9 @@
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
+    "autoprefixer": "^10.4.16",
     "eslint": "^9.29.0",
-    "typescript": "5.8.2",
     "postcss": "^8.4.31",
-    "autoprefixer": "^10.4.16"
+    "typescript": "5.8.2"
   }
 }

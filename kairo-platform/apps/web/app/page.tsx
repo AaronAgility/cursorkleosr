@@ -1,7 +1,8 @@
 'use client';
 
-import { useChat } from 'ai/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
 import { Rocket, BookOpen, Settings, Bot, Zap, GitPullRequest } from 'lucide-react';
 import { ChatInterface } from '../components/ChatInterface';
 import { PreviewPanel } from '../components/PreviewPanel';
@@ -63,7 +64,7 @@ const loadSettings = (): ProjectSettings => {
   
   // Default settings - all agents enabled with full configuration
   return {
-    enabledAgents: ['design-agent', 'frontend-agent', 'content-agent', 'testing-agent', 'performance-agent', 'security-agent', 'responsive-agent', 'deployment-agent', 'translation-agent'],
+    enabledAgents: ['design-agent', 'frontend-agent', 'content-agent', 'testing-agent', 'performance-agent', 'security-agent', 'responsive-agent', 'deployment-agent', 'translation-agent', 'pr-agent'],
     orchestrationMode: 'intelligent',
     projectType: 'web-app',
     agentModels: {
@@ -76,6 +77,7 @@ const loadSettings = (): ProjectSettings => {
       'responsive-agent': 'gpt-4o',
       'deployment-agent': 'gpt-4o',
       'translation-agent': 'gpt-4o',
+      'pr-agent': 'claude-4-sonnet',
     },
     reasoningModel: 'gemini-2.5-pro',
     agentPrompts: {
@@ -88,6 +90,7 @@ const loadSettings = (): ProjectSettings => {
       'responsive-agent': '',
       'deployment-agent': '',
       'translation-agent': '',
+      'pr-agent': '',
     },
     apiKeys: {
       openai: '',
@@ -132,14 +135,31 @@ const loadSettings = (): ProjectSettings => {
 export default function HomePage() {
   const [showSettings, setShowSettings] = useState(false);
   const [projectSettings, setProjectSettings] = useState<ProjectSettings>(loadSettings);
+  const [input, setInput] = useState('');
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: '/api/chat',
-    body: {
-      orchestrationType: 'main',
-      projectSettings,
-    },
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({
+      api: '/api/chat',
+      body: {
+        orchestrationType: 'main',
+        projectSettings,
+      },
+    }),
   });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim()) {
+      sendMessage({ text: input });
+      setInput('');
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+  };
+
+  const isLoading = status === 'streaming' || status === 'submitted';
 
   return (
     <div className="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col">

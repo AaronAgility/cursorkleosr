@@ -2,92 +2,63 @@
 
 import { useState, useEffect } from 'react';
 
-export type RuntimeMode = 'proton' | 'web' | 'standalone';
+export type RuntimeMode = 'electron' | 'web';
 
 export interface RuntimeInfo {
   mode: RuntimeMode;
-  isProton: boolean;
+  isElectron: boolean;
   isWeb: boolean;
-  isStandalone: boolean;
-  features: {
-    hotReload: boolean;
-    streaming: boolean;
-    multiAgent: boolean;
-    livePreview: boolean;
-  };
+  userAgent: string;
+  platform: string;
 }
+
+const defaultRuntimeInfo: RuntimeInfo = {
+  mode: 'web',
+  isElectron: false,
+  isWeb: true,
+  userAgent: '',
+  platform: 'unknown',
+};
 
 /**
  * Hook to get runtime configuration on the client side
  */
 export function useRuntime(): RuntimeInfo {
-  const [runtime, setRuntime] = useState<RuntimeInfo>({
-    mode: 'web',
-    isProton: false,
-    isWeb: true,
-    isStandalone: false,
-    features: {
-      hotReload: true,
-      streaming: true,
-      multiAgent: true,
-      livePreview: true,
-    },
-  });
+  const [runtimeInfo, setRuntimeInfo] = useState<RuntimeInfo>(defaultRuntimeInfo);
 
   useEffect(() => {
-    // Client-side detection
-    const detectMode = (): RuntimeMode => {
-      // Check for Proton environment
-      if (
-        typeof window !== 'undefined' &&
-        ((window as any).proton || 
-         process.env.NEXT_PUBLIC_PROTON_MODE === 'true')
-      ) {
-        return 'proton';
-      }
-
-      // Check for standalone deployment
-      if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
-        return 'standalone';
-      }
-
-      return 'web';
-    };
-
-    const mode = detectMode();
+    // Detect runtime environment
+    const mode = detectRuntimeMode();
     
-    setRuntime({
+    setRuntimeInfo({
       mode,
-      isProton: mode === 'proton',
+      isElectron: mode === 'electron',
       isWeb: mode === 'web',
-      isStandalone: mode === 'standalone',
-      features: {
-        hotReload: mode !== 'standalone',
-        streaming: true,
-        multiAgent: true,
-        livePreview: true,
-      },
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+      platform: typeof navigator !== 'undefined' ? navigator.platform : 'unknown',
     });
   }, []);
 
-  return runtime;
+  return runtimeInfo;
 }
 
-/**
- * Get runtime mode synchronously (returns 'web' during SSR)
- */
-export function getRuntimeMode(): RuntimeMode {
-  if (typeof window === 'undefined') {
-    return 'web'; // SSR fallback
+function detectRuntimeMode(): RuntimeMode {
+  // Check if we're in Electron
+  if (typeof window !== 'undefined' && window.navigator.userAgent.includes('Electron')) {
+    return 'electron';
   }
 
-  if ((window as any).proton || process.env.NEXT_PUBLIC_PROTON_MODE === 'true') {
-    return 'proton';
-  }
-
-  if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
-    return 'standalone';
-  }
-
+  // Default to web
   return 'web';
+}
+
+// Utility function to check if we're in Electron
+export function isElectronEnvironment(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.navigator.userAgent.includes('Electron');
+}
+
+// Utility function to get runtime mode
+export function getRuntimeMode(): RuntimeMode {
+  return detectRuntimeMode();
 } 

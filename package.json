@@ -12,5 +12,12 @@
     "app:build": "cd kairo-platform && npm run web:build && npx electron-builder --publish=never",
     "app:pack": "cd kairo-platform && npm run web:build && npx electron-builder"
   },
-  "description": "Kairo Multi-Agent Development Platform - Now with Desktop App Support"
-} 
+  "description": "Kairo Multi-Agent Development Platform - Now with Desktop App Support",
+  "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.0-beta.2",
+    "@ai-sdk/azure": "^2.0.0-beta.1",
+    "@ai-sdk/google": "^2.0.0-beta.2",
+    "@ai-sdk/openai": "^2.0.0-beta.1",
+    "ai": "^5.0.0-beta.1"
+  }
+}

@@ -11,6 +11,7 @@ export { SecurityAgent } from './agents/security-agent/agent.js';
 export { ResponsiveAgent } from './agents/responsive-agent/agent.js';
 export { DeploymentAgent } from './agents/deployment-agent/agent.js';
 export { TranslationAgent } from './agents/translation-agent/agent.js';
+export { PRAgent } from './agents/pr-agent/agent.js';
 
 // Import all agent types
 import { DesignAgent } from './agents/design-agent/agent.js';
@@ -22,6 +23,7 @@ import { SecurityAgent } from './agents/security-agent/agent.js';
 import { ResponsiveAgent } from './agents/responsive-agent/agent.js';
 import { DeploymentAgent } from './agents/deployment-agent/agent.js';
 import { TranslationAgent } from './agents/translation-agent/agent.js';
+import { PRAgent } from './agents/pr-agent/agent.js';
 import type { AgentContext, AgentResponse } from './types.js';
 
 // Agent registry
@@ -35,6 +37,7 @@ export const AGENT_REGISTRY = {
   'responsive-agent': ResponsiveAgent,
   'deployment-agent': DeploymentAgent,
   'translation-agent': TranslationAgent,
+  'pr-agent': PRAgent,
 } as const;
 
 export type AgentId = keyof typeof AGENT_REGISTRY;

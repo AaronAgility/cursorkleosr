@@ -1,104 +1,98 @@
-# 🚀 Kairo Quick Start
+# 🚀 Kairo Quick Start Guide
 
-Run Kairo Multi-Agent Development Platform from the repository root.
+Get up and running with Kairo's multi-agent development platform in minutes.
 
-## ⚡ **One-Command Setup**
+## Prerequisites
 
+- **Node.js 18+** and npm
+- **Git** for version control
+- **Optional**: API keys for AI providers (OpenAI, Anthropic, Google)
+
+## Installation
+
+1. Install all dependencies
 ```bash
 npm run setup
 ```
 
-This will:
-1. Install all dependencies (including local Proton CLI)
-2. Check your environment and show available modes
+## Development Options
 
-## 🎯 **Running Kairo**
-
-### **Default Development (Web Mode)**
+### **Desktop App (Recommended)**
 ```bash
-npm run dev
-# or
-npm run web:dev
-```
-
-### **Enhanced Development (Proton Mode)**
-```bash
-npm run proton:dev
-```
-
-### **Desktop App with Test Project**
-```bash
-# Optional: Clone test project for enhanced preview
-cd ..
-git clone https://github.com/agility/kairo-test-project
-cd kairo
-
-# Start desktop app with automatic project detection
 npm run app:dev
 ```
 
-## 📊 **Available Commands**
-
-### **Development**
+### **Web Interface**
 ```bash
-npm run dev           # Start web development (default)
-npm run web:dev       # Start web development
-npm run proton:dev    # Start Proton enhanced development
-npm run app:dev       # Start desktop app with project detection
+npm run dev
 ```
 
-### **Building & Production**
+## Available Commands
+
+### Development
 ```bash
-npm run build         # Build for web production
-npm run web:build     # Build for web production  
-npm run web:start     # Start web production server
-npm run proton:build  # Build with Proton optimizations
-npm run proton:start  # Start Proton production server
-npm run app:build     # Build desktop app for distribution
-npm run app:pack      # Package desktop app
+npm run dev         # Start web development server
+npm run app:dev     # Launch desktop app in development
+npm run build       # Build web application
+npm run app:build   # Build desktop app for distribution
+npm run app:pack    # Package desktop app
 ```
 
-### **Environment & Status**
+### Utilities
 ```bash
-npm run check         # Check dual-mode compatibility
-npm run proton:status # Check Proton CLI status
-npm run proton:info   # Show environment information
+npm run lint        # Run ESLint across all packages
+npm run setup       # Install all dependencies
 ```
 
-### **Setup & Maintenance**
-```bash
-npm run setup         # Full setup (install + check)
-npm run install:all   # Install dependencies
-npm run lint          # Run linting
-```
+## 🎯 First Steps
 
-## 🌟 **What You Get**
+1. **Start the desktop app**: `npm run app:dev`
+2. **Configure Settings**: Click the Settings button to configure:
+   - AI provider API keys
+   - Agent models and preferences
+   - Project type and orchestration mode
+3. **Start Developing**: Use the chat interface to coordinate with AI agents
 
-- **🤖 9 AI Agents**: Specialized for different development tasks
-- **🔄 Live Preview**: Real-time code execution and preview  
-- **⚡ Hot Reload**: Enhanced development experience
-- **🎯 Type-Safe**: Full TypeScript integration
-- **📦 TurboRepo**: Optimized monorepo structure
-- **🚀 Dual-Mode**: Choose web or enhanced Proton experience
-- **🖥️ Desktop App**: Native Electron app with project detection
-- **🔗 Auto-Detection**: Automatically finds and runs test projects
+## ✨ Key Features
 
-## 🎯 **Next Steps**
+- **🤖 Multi-Agent System**: 10+ specialized AI agents for different development tasks
+- **🖥️ Native Desktop App**: Electron-based app with modern interface
+- **⚡ Real-time Orchestration**: Intelligent agent coordination
+- **🔧 Project Integration**: Automatic test project detection
+- **🎨 Modern UI**: Beautiful, responsive interface with drag-and-drop
 
-1. Run \`npm run setup\` to get started
-2. Run \`npm run dev\` for quick development  
-3. Open your browser to see the live preview
-4. Try \`npm run proton:dev\` for enhanced features
+## 🔧 Configuration
 
-## 🔗 **Test Project Integration**
+### Agent Models
+Configure which AI models each agent uses:
+- **Claude**: Best for coding and analysis
+- **GPT**: Great for general tasks and reasoning
+- **Gemini**: Excellent for planning and strategy
 
-Kairo can automatically detect and run test projects for enhanced development:
+### API Keys
+Add your provider API keys in Settings:
+- OpenAI API Key
+- Anthropic API Key  
+- Google API Key
+- Azure OpenAI credentials
 
-- **Automatic Detection**: Checks for `kairo-test-project` in parent directory
-- **Live Preview**: Shows your test project in the preview panel
-- **Dual Development**: Kairo interface + your project running simultaneously
-- **Fallback**: Works with any project running on `localhost:3000`
+### Orchestration Modes
+- **Intelligent**: Agents decide how to collaborate
+- **Manual**: You control which agents are involved
+- **Sequential**: Agents work one after another
+
+## 🚀 Next Steps
+
+4. Try `npm run app:dev` for the full desktop experience
+5. Explore the agent system and orchestration capabilities
+6. Configure your project settings for optimal agent performance
+
+## 📚 Additional Resources
+
+- [Full Documentation](./README.md)
+- [Agent Architecture](./kairo-platform/apps/docs/)
+- [Desktop App Guide](./kairo-platform/electron/)
 
 ---
 
-**Ready to build the future with AI agents!** 🤖✨
+**Ready to build with AI agents?** Start with `npm run app:dev` and experience the future of development! 🤖✨

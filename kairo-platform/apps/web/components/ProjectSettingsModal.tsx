@@ -22,7 +22,8 @@ import {
   Plus,
   Trash2,
   ExternalLink,
-  Languages
+  Languages,
+  GitPullRequest
 } from 'lucide-react';
 
 interface MCPServer {
@@ -82,6 +83,7 @@ const AVAILABLE_AGENTS = [
   { id: 'responsive-agent', name: 'Responsive', icon: Smartphone, description: 'Multi-device, PWA features' },
   { id: 'deployment-agent', name: 'Deployment', icon: Rocket, description: 'CI/CD, infrastructure' },
   { id: 'translation-agent', name: 'Translation', icon: Languages, description: 'Internationalization and localization' },
+  { id: 'pr-agent', name: 'PR Review', icon: GitPullRequest, description: 'Pull request review, code quality' },
 ];
 
 const ORCHESTRATION_MODES = [
@@ -164,6 +166,7 @@ export function ProjectSettingsModal({ settings, onSettingsChange, onClose }: Pr
           case 'frontend-agent':
           case 'design-agent':
           case 'testing-agent':
+          case 'pr-agent':
             defaultModels[agent.id] = 'claude-4-sonnet'; // Best for coding
             break;
           case 'performance-agent':

@@ -1,86 +1,85 @@
-# 🚀 Kairo Multi-Agent Development Platform
-![Screenshot 2025-06-26 at 5 17 29 PM](https://github.com/user-attachments/assets/369dd206-31cc-4d6e-aab6-6c87c963ff6a)
+# Kairo Multi-Agent Development Platform
 
-AI-powered development platform with 9 specialized agents and a snazzy electron env.
+> **Intelligent AI Agent Orchestration for Modern Development**
 
-## ⚡ **Quick Start from Repository Root**
+Transform your development workflow with Kairo's multi-agent system, featuring a native desktop app built with Electron.
+
+## 🚀 Quick Start
 
 ```bash
-# One-command setup
+# Clone and setup
+git clone https://github.com/your-org/kairo.git
+cd kairo
 npm run setup
 
-# Start development (default web mode)
+# Start desktop app
+npm run app:dev
+
+# Or start web version
 npm run dev
-
-# Or try enhanced Proton mode
-npm run proton:dev
 ```
 
-## 🎯 **All Available Commands**
+## 📋 Available Commands
 
-### **🚀 Development**
+### Development
 ```bash
-npm run dev           # Start web development (default)
-npm run web:dev       # Start web development explicitly
-npm run proton:dev    # Start enhanced Proton development
+npm run dev         # Start web development server
+npm run app:dev     # Launch desktop app in development
+npm run build       # Build web application
+npm run app:build   # Build desktop app for distribution
+npm run app:pack    # Package desktop app
 ```
 
-### **📦 Building & Production**
+### Utilities
 ```bash
-npm run build         # Build for web production
-npm run web:build     # Build for web production
-npm run web:start     # Start web production server
-npm run proton:build  # Build with Proton optimizations
-npm run proton:start  # Start Proton production server
+npm run lint        # Run ESLint across all packages
+npm run setup       # Install all dependencies
 ```
 
-### **📊 Environment & Status**
-```bash
-npm run check         # Check dual-mode compatibility
-npm run proton:status # Check Proton CLI status
-npm run proton:info   # Show detailed environment info
-```
+## ✨ Key Features
 
-### **🛠 Setup & Maintenance**
-```bash
-npm run setup         # Full setup (install + check)
-npm run install:all   # Install all dependencies
-npm run lint          # Run linting across platform
-```
+- **🤖 Multi-Agent System**: Specialized agents for design, frontend, performance, security, testing, and more
+- **🖥️ Native Desktop App**: Built with Electron for seamless development experience  
+- **🌐 Web Interface**: Full-featured browser-based interface
+- **⚡ Real-time Orchestration**: Intelligent agent coordination and task delegation
+- **🔧 Project Integration**: Automatic test project detection and management
+- **🎨 Modern UI**: Beautiful, responsive interface with drag-and-drop support
 
-## 🌟 **What Kairo Provides**
-
-- **🤖 9 Specialized AI Agents**: Design, Frontend, Content, Testing, Performance, Security, Responsive, Deployment, Translation
-- **🔄 Live Preview**: Real-time code execution and preview in browser
-- **⚡ Enhanced Development**: Hot reload, advanced bundling, edge simulation
-- **🎯 Type-Safe**: Full TypeScript integration throughout
-- **📦 TurboRepo**: Optimized monorepo with workspace management
-- **🚀 Dual-Mode**: Choose traditional web or enhanced Proton experience
-- **🌐 Universal Deploy**: Web, Proton cloud, or container deployment
-
-## 🏗 **Platform Architecture**
+## 🏗️ Project Structure
 
 ```
-kairo/                    # Repository root
-├── README.md                    # This file
-├── QUICK-START.md              # Quick start guide
-├── package.json                # Root commands
-└── kairo-platform/             # Main platform
-    ├── apps/
-    │   ├── web/                # Main UI application
-    │   ├── agents/             # AI agent system  
-    │   └── docs/               # Documentation
-    ├── tools/proton-dev/       # Local Proton CLI
-    ├── lib/runtime-config.ts   # Dual-mode detection
-    ├── proton.config.js        # Proton configuration
-    └── DUAL-MODE-SETUP.md      # Detailed setup guide
+kairo/
+├── kairo-platform/
+│   ├── apps/
+│   │   ├── web/                 # Next.js web application
+│   │   ├── docs/                # Documentation site
+│   │   └── agents/              # Agent system implementation
+│   ├── packages/                # Shared packages and utilities
+│   ├── lib/                     # Core libraries and providers
+│   ├── electron/                # Electron desktop app
+│   └── assets/                  # Icons and static assets
+├── agents/                      # Agent configuration files
+└── package.json                 # Root workspace configuration
 ```
 
-## 🤖 **Agent Architecture**
+## 🎯 Agent Architecture
 
-Kairo uses a sophisticated multi-agent orchestration system where a Main Orchestration Agent coordinates with 9 specialized agents based on project configuration and user requests.
+Kairo features a sophisticated multi-agent system with specialized capabilities:
 
-### **Orchestration Flow**
+### Core Agents
+- **Main Orchestration Agent**: Coordinates all other agents and manages workflow
+- **Frontend Agent**: React/Next.js development and optimization
+- **Design Agent**: UI/UX design and component architecture
+- **Performance Agent**: Code optimization and performance monitoring
+- **Security Agent**: Security analysis and vulnerability detection
+- **Testing Agent**: Test generation and quality assurance
+- **Content Agent**: Documentation and content management
+- **Responsive Agent**: Mobile and responsive design optimization
+- **Deployment Agent**: CI/CD and deployment automation
+- **Translation Agent**: Internationalization and localization
+- **PR Agent**: Pull request analysis and code review
+
+### Agent Orchestration Flow
 
 ```mermaid
 graph TD
@@ -89,154 +88,101 @@ graph TD
     C --> D[Project Settings]
     C --> E[Agent Configuration]
     
-    D --> F[orchestrationMode]
-    D --> G[enabledAgents]
-    D --> H[projectType]
-    D --> I[agentModels]
+    B --> F[Design Agent]
+    B --> G[Frontend Agent]
+    B --> H[Performance Agent]
+    B --> I[Security Agent]
+    B --> J[Testing Agent]
+    B --> K[Content Agent]
+    B --> L[Responsive Agent]
+    B --> M[Deployment Agent]
+    B --> N[Translation Agent]
+    B --> O[PR Agent]
     
-    E --> J[API Keys]
-    E --> K[Custom Prompts]
-    E --> L[SDK Rules]
+    F --> P[Coordinated Response]
+    G --> P
+    H --> P
+    I --> P
+    J --> P
+    K --> P
+    L --> P
+    M --> P
+    N --> P
+    O --> P
     
-    B --> M{Select Agents}
-    
-    M --> N[Design Agent<br/>UI/UX Design]
-    M --> O[Frontend Agent<br/>React/Next.js]
-    M --> P[Performance Agent<br/>Optimization]
-    M --> Q[Security Agent<br/>Security Review]
-    M --> R[Testing Agent<br/>Test Generation]
-    M --> S[Content Agent<br/>CMS Integration]
-    M --> T[Responsive Agent<br/>Mobile/Tablet]
-    M --> U[Deployment Agent<br/>CI/CD]
-    M --> V[Translation Agent<br/>i18n]
-    
-    N --> W[Coordinated Response]
-    O --> W
-    P --> W
-    Q --> W
-    R --> W
-    S --> W
-    T --> W
-    U --> W
-    V --> W
-    
-    W --> X[Action Items]
-    W --> Y[Next Steps]
-    W --> Z[Collaboration Requests]
-    
-    style B fill:#FFCB28,stroke:#1a1a1a,stroke-width:3px,color:#1a1a1a
-    style M fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
-    style W fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    P --> Q[Action Items]
+    P --> R[Next Steps]
+    P --> S[Collaboration Requests]
 ```
 
-### **Configuration-Driven Orchestration**
+## 🔧 Configuration
 
-The orchestration system reads configuration from the project settings to determine:
+### Project Settings
+Configure your agents through the settings interface:
+- **Agent Models**: Choose AI models for each agent (Claude, GPT, Gemini)
+- **API Keys**: Configure provider API keys
+- **Orchestration Mode**: Intelligent, manual, or sequential
+- **Project Type**: Web app, mobile app, or custom
 
-- **🎯 Agent Selection**: Which agents to activate based on `enabledAgents` array
-- **🧠 Model Assignment**: Which AI model each agent uses via `agentModels` mapping  
-- **⚙️ Orchestration Mode**: How agents collaborate (`intelligent`, `manual`, `sequential`)
-- **🔑 API Integration**: Provider credentials and SDK-specific rules
-- **📝 Custom Behavior**: Agent-specific prompts and instructions
+### Desktop App Features
+- **Native Performance**: Optimized Electron app with custom icons
+- **Project Detection**: Automatically detects and manages test projects
+- **Integrated Development**: Seamless switching between Kairo and your projects
+- **Modern Interface**: Clean, draggable interface with splash screen
 
-### **Agent Specializations**
+## 🚀 Getting Started
 
-| Agent | Purpose | Key Capabilities |
-|-------|---------|------------------|
-| **Design** | UI/UX Design | Layout, styling, user experience optimization |
-| **Frontend** | React/Next.js Development | Component architecture, state management |
-| **Performance** | Speed & Optimization | Bundle analysis, performance monitoring |
-| **Security** | Security Review | Vulnerability scanning, secure coding practices |
-| **Testing** | Test Generation | Unit tests, integration tests, E2E scenarios |
-| **Content** | CMS Integration | Agility CMS setup, content modeling |
-| **Responsive** | Multi-device Support | Mobile-first design, responsive layouts |
-| **Deployment** | CI/CD Pipeline | Build optimization, deployment strategies |
-| **Translation** | Internationalization | Multi-language support, locale management |
+### Prerequisites
+- Node.js 18+ and npm
+- Git for version control
+- Optional: API keys for AI providers (OpenAI, Anthropic, Google)
 
-### **How It Works**
+### Installation Steps
 
-1. **User Input**: You send a request through the Kairo UI
-2. **Orchestration**: The Main Agent analyzes your request and project configuration
-3. **Agent Selection**: Based on your `enabledAgents` and request type, relevant specialists are activated
-4. **Coordination**: Each agent contributes their expertise using their configured AI model
-5. **Response**: A unified response with action items, next steps, and collaboration requests
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-org/kairo.git
+   cd kairo
+   ```
 
-The system is fully configurable through the Project Settings modal, allowing you to:
-- Enable/disable specific agents
-- Assign different AI models to different agents
-- Set custom prompts for specialized behavior
-- Configure API keys for different providers
-- Define SDK-specific rules and guidelines
+2. **Install dependencies**
+   ```bash
+   npm run setup
+   ```
 
-## 🚀 **Getting Started**
+3. **Configure API keys** (optional)
+   - Open the desktop app: `npm run app:dev`
+   - Click Settings and add your API keys
 
-1. **Clone** the repository
-2. **Run** `npm run setup` from the root
-3. **Start** development with `npm run dev`
-4. **Open** your browser to see the platform
-5. **Try** `npm run proton:dev` for enhanced features
+4. **Start developing**
+   - Desktop app: `npm run app:dev`
+   - Web interface: `npm run dev`
 
-## 🔗 **Test Project Setup (Optional)**
+## 📚 Documentation
 
-For enhanced development and testing, Kairo can automatically detect and run test projects:
+- [Agent Architecture](./kairo-platform/apps/docs/) - Deep dive into the multi-agent system
+- [API Reference](./kairo-platform/lib/) - Core libraries and provider integration
+- [Desktop App Guide](./kairo-platform/electron/) - Electron app development
 
-### **Option 1: Official Test Project**
-```bash
-# Clone the official test project (recommended)
-cd ..  # Go to parent directory of kairo
-git clone https://github.com/agility/kairo-test-project
-cd kairo
-npm run app:dev  # Start desktop app with test project
-```
+## 🔗 Quick Links
 
-### **Option 2: Custom Project**
-Place any project with a `turbo dev --filter=web` command in the parent directory:
-```bash
-# Your directory structure should look like:
-parent-directory/
-├── kairo/                     # This repository
-├── kairo-test-project/        # Official test project
-└── your-custom-project/       # Any other project with turbo dev support
-```
+- **Desktop App**: `npm run app:dev` - Native development experience
+- **Web Interface**: `npm run dev` - Browser-based interface  
+- **Documentation**: `cd kairo-platform/apps/docs && npm run dev`
+- **Agent System**: `cd kairo-platform/apps/agents && npm run dev`
 
-### **Preview Behavior**
-- **With test project**: The preview panel loads your project on `localhost:3000`
-- **Without test project**: The preview panel shows whatever is running on `localhost:3000`
-- **Priority order**: kairo-test-project → any localhost:3000 content
+## 🛠️ Development Workflow
 
-### **Desktop App Commands**
-```bash
-npm run app:dev       # Start desktop app with project detection
-npm run app:build     # Build desktop app for distribution
-npm run app:pack      # Package desktop app
-```
+1. Start the desktop app with `npm run app:dev`
+2. Configure your agents and API keys
+3. Create or connect your project
+4. Use the orchestration system to coordinate development tasks
+5. Deploy with integrated deployment agents
 
-## 📚 **Documentation**
+## 🤝 Contributing
 
-- [Quick Start Guide](./QUICK-START.md) - Get running in 2 minutes
-- [Dual-Mode Setup](./kairo-platform/DUAL-MODE-SETUP.md) - Detailed configuration
-- [Agent Documentation](./kairo-platform/apps/agents/README.md) - AI agent system
-- [Platform README](./kairo-platform/README.md) - Complete platform docs
+We welcome contributions! Please see our contributing guidelines and feel free to submit issues and pull requests.
 
-## 🎯 **Use Cases**
+## 📄 License
 
-- **Rapid Prototyping**: Get AI agents to build your ideas
-- **Code Review**: Security, performance, and best practice analysis  
-- **Multi-Modal Development**: Web apps, mobile experiences, content management
-- **Team Collaboration**: Specialized agents for different team roles
-- **Learning**: See how AI approaches different development challenges
-
-## 🤝 **Contributing**
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Test with both `npm run dev` and `npm run proton:dev`
-4. Commit your changes (`git commit -m 'Add amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
-
----
-
-**Built with ❤️ for the future of AI-powered development** 🤖✨
-
-Ready to experience multi-agent development? Run `npm run setup` and get started!
+This project is licensed under the MIT License - see the LICENSE file for details.

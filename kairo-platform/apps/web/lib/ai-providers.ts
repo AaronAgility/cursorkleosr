@@ -1,7 +1,10 @@
-import { anthropic } from "@ai-sdk/anthropic";
-
-export function getProviderForAgent() {
-  // For now, return a simple model setup
-  // This will be enhanced when we integrate with the actual agent system
-  return anthropic("claude-3-5-sonnet-20241022");
-}
+// Re-export functions from the root level ai-providers
+export { 
+  createProviderWithApiKey,
+  getProviderForAgent,
+  getProviderForAgentTask,
+  AI_PROVIDERS,
+  AGENT_PROVIDERS,
+  getFallbackProvider,
+  checkProviderHealth
+} from "../../../lib/ai-providers";
