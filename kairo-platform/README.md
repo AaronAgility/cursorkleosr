@@ -114,18 +114,39 @@ Kairo is an advanced multi-agent AI development platform that combines intellige
 
 ## 📁 Project Structure
 
+### Platform Structure
 ```
-kairo-platform/
-├── apps/
-│   ├── web/           # Kairo orchestration interface (port 3001)
-│   ├── workspace/     # Main project development (port 3000)
-│   └── docs/          # Documentation (port 4001)
-├── packages/
-│   ├── ui/            # Shared UI components
-│   ├── eslint-config/ # Shared ESLint configuration
-│   └── typescript-config/ # Shared TypeScript configuration
-└── agents/            # AI agent configurations
+workspace/
+├── kairo-platform/              # Platform source code (this repository)
+│   ├── apps/
+│   │   ├── web/                 # Kairo orchestration interface (port 3001)
+│   │   ├── workspace/           # Project manager (port 3000)
+│   │   └── docs/                # Documentation (port 4001)
+│   ├── lib/
+│   │   └── project-manager.ts   # Project creation and management
+│   ├── packages/
+│   │   ├── ui/                  # Shared UI components
+│   │   ├── eslint-config/       # Shared ESLint configuration
+│   │   └── typescript-config/   # Shared TypeScript configuration
+│   └── agents/                  # AI agent configurations
+│
+└── kairo-projects/              # Generated projects (separate Git repos)
+    ├── project-1/               # Each project = independent Git repository
+    │   ├── .git/                # Independent Git history
+    │   ├── src/                 # Project source code
+    │   ├── package.json         # Project dependencies
+    │   └── README.md            # Project documentation
+    ├── project-2/
+    └── project-3/
 ```
+
+### Benefits of Project Isolation
+- ✅ **Clean Separation** - Platform code separate from generated projects
+- ✅ **Independent Git Repos** - Each project has its own Git history
+- ✅ **Easy Export** - Projects are already in separate repositories
+- ✅ **Customer Ownership** - Customers can own their project repos
+- ✅ **Platform Updates** - Kairo platform can be updated independently
+- ✅ **Scalable** - Unlimited projects without cluttering platform repo
 
 ## 🚀 Deployment
 
