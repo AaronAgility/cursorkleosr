@@ -27,36 +27,33 @@ flowchart TD
 
 ### Implementation
 ```bash
-# Tool N: Capture user input
-run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "prompt message" [timeout] [default]
+# Tool N: Check interaction configuration
+read_file: .cursorrules
 
-# Tool N+1: Read response and continue
-read_file: .cursor/user_response.txt
+# Tool N+1: Apply default action based on configuration
+# Response handling integrated into workflow
 ```
 
 ### Usage Examples
 
 #### Commit Approval
 ```bash
-# AI executes via run_terminal_cmd:
-.cursor/tools/user-input-capture/user-input-capture.sh "Phase 3: User Auth completed. Ready to commit? (approve/reject)" 300 "approve"
-
-# AI continues tool chain by reading response:
-# Response file contains: "approve" or "reject"
+# AI checks configuration and applies default behavior
+read_file: .cursorrules
+# Based on mode setting, either auto-commit or defer
 ```
 
 #### Choice Selection
 ```bash
-# AI executes:
-.cursor/tools/user-input-capture/user-input-capture.sh "Next phase focus: API or Database? (api/db)" 180 "api"
-
-# AI reads response and continues with chosen direction
+# AI applies configured defaults for workflow direction
+read_file: .cursor/workflow_state.md
+# Continues with configured default path
 ```
 
 #### Modification Requests
 ```bash
-# AI executes:
-.cursor/tools/user-input-capture/user-input-capture.sh "Code review needed. Issues found: security, performance. Fix which first? (security/performance/both)" 240 "both"
+# AI applies default improvement priorities
+# Based on predefined patterns in project settings
 ```
 
 ### Configuration
@@ -147,13 +144,13 @@ flowchart TD
 # Tool 18: Complete phase work
 edit_file: update final component
 
-# Tool 19: Get immediate commit approval (non-breaking)
-run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Phase 3 completed. Commit now?" 300 "approve"
+# Tool 19: Check commit mode and apply default
+read_file: .cursorrules
 
-# Tool 20: Read response and continue
-read_file: .cursor/user_response.txt
+# Tool 20: Execute commit based on configuration
+run_terminal_cmd: git commit -m "Phase 3: Component Implementation"
 
-# Tool 21-25: Execute commit or continue to next phase based on response
+# Tool 21-25: Continue to next phase based on workflow configuration
 ```
 
 ### Example 2: Plan Approval (Deferred)
@@ -164,24 +161,24 @@ read_file: .cursor/user_response.txt
 | INT001 | PLAN_APPROVAL | "Blueprint for Phase 4: Payment Integration - Approve to proceed?" | PENDING | 2025-01-16T10:35:00Z | |
 ```
 
-### Example 3: Multiple Inputs in One Tool Chain
+### Example 3: Multiple Configuration Checks in One Tool Chain
 ```bash
-# Tool 10: Get commit approval
-run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Commit Phase 3?" 300 "approve"
+# Tool 10: Check commit configuration
+read_file: .cursorrules
 
-# Tool 11: Read commit response
-read_file: .cursor/user_response.txt
-
-# Tool 12: Execute commit if approved
+# Tool 11: Apply commit default
 run_terminal_cmd: git commit -m "Phase 3: Component Implementation"
 
-# Tool 15: Get next phase direction
-run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Next: API or Database? (api/db)" 180 "api"
+# Tool 12: Update workflow state
+edit_file: .cursor/workflow_state.md
 
-# Tool 16: Read direction response  
-read_file: .cursor/user_response.txt
+# Tool 15: Check next phase configuration
+read_file: .cursor/workflow_state.md
 
-# Tool 17-25: Start appropriate phase based on response
+# Tool 16: Apply configured workflow direction
+# Continue with default workflow path
+
+# Tool 17-25: Start next phase based on configuration
 ```
 
 ## Response Methods

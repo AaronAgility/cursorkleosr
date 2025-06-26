@@ -482,7 +482,6 @@ project/
     │   ├── user-interaction-system.md
     │   ├── archiving-system.md
     │   ├── archive-index.md
-    │   ├── user-input-capture.sh
     │   └── recovery-scripts/
     │       └── restore-from-archive.sh
     └── archive/              # Automatic archiving
@@ -530,7 +529,6 @@ project/
     │   ├── user-interaction-system.md
     │   ├── archiving-system.md
     │   ├── archive-index.md
-    │   ├── user-input-capture.sh
     │   └── recovery-scripts/
     │       └── restore-from-archive.sh
     └── archive/

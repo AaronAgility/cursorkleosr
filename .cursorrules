@@ -49,7 +49,6 @@ confirmation:
 
 ## Tool Chain Efficiency Rules
 - Maximize use of all 25 available tool calls
-- Use `.cursor/tools/user-input-capture/user-input-capture.sh` for immediate user input needs
 - Never break tool chains for user input - capture and continue
 - Group related work before requesting user input
 - Plan multiple inputs within single tool chain when possible
@@ -97,7 +96,6 @@ confirmation:
 - Maintain semantic reference system via GitSHA tracking
 
 ## Non-Breaking Input Capture Rules
-- Use `run_terminal_cmd` with `.cursor/tools/user-input-capture/user-input-capture.sh` for immediate input
 - Follow pattern: capture input → read response → continue based on response
 - Handle timeouts gracefully using configured defaults
 - Support multiple inputs per tool chain

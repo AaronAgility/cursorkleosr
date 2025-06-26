@@ -63,9 +63,8 @@ Actions:
 ```yaml
 Trigger: Commit or major decision required
 Actions:
-  - Use .cursor/tools/user-input-capture/user-input-capture.sh for non-breaking input
   - Apply timeout defaults from .cursorrules
-  - Continue workflow based on response
+  - Continue workflow based on configured mode
   - Log all interactions
 ```
 
@@ -179,14 +178,12 @@ Feature Implementation:
 5. **Archive Completed**: Use the archiving system for completed phases
 
 **✅ Verified Functionality:**
-- ✅ User-input-capture system working
 - ✅ Commit approval workflow functional  
 - ✅ Git integration with real SHA tracking
 - ✅ Timeout handling and defaults configured
-- ✅ Non-breaking workflow support
+- ✅ Configuration-based workflow support
 
 **🔧 Available Tools:**
-- `.cursor/tools/user-input-capture/user-input-capture.sh` - Non-breaking user input
 - `.cursor/tools/user-input-capture/commit-with-approval.sh` - Commit approval workflow
 - `.cursor/rules/project-settings.md` - Project configuration
 - `.cursor/libs/` - SDK documentation and examples
@@ -195,4 +192,4 @@ Feature Implementation:
 1. Define your project in `.cursor/rules/project-settings.md`
 2. Update this workflow_state.md with your first phase
 3. Begin development with proper commit approval workflow
-4. Use the verified user-input-capture system for decisions
+4. Use the configured default system for decisions

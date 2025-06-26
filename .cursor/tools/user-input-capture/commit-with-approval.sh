@@ -1,6 +1,6 @@
 #!/bin/bash
 # Commit with User Approval Script
-# Integrates with user-input-capture.sh for non-breaking workflow commits
+# Applies configured defaults from .cursorrules for commit behavior
 # Usage: ./commit-with-approval.sh "commit message" [timeout] [branch]
 
 set -e
@@ -50,21 +50,16 @@ echo -e "${CYAN}Proposed commit message:${NC} $COMMIT_MESSAGE"
 echo -e "${CYAN}Target branch:${NC} $BRANCH"
 echo ""
 
-# Use user-input-capture for approval
-PROMPT="Do you approve this commit? (yes/no/message)"
-DEFAULT_RESPONSE="reject"   # From .cursorrules commit_approval default
-TIMEOUT_ACTION="Continue"   # From .cursorrules commit_approval timeout_action
-
-.cursor/tools/user-input-capture/user-input-capture.sh "$PROMPT" "$TIMEOUT" "$DEFAULT_RESPONSE" "$TIMEOUT_ACTION" "$RESPONSE_FILE"
-
-# Read the response
-if [ ! -f "$RESPONSE_FILE" ]; then
-    echo -e "${RED}Error: No response captured${NC}"
-    exit 1
+# Apply configured defaults from .cursorrules
+# Check mode setting (always-ask vs insanity mode)
+MODE_LINE=$(grep -E "^\s*-\s*\*\*Default Mode\*\*:" .cursorrules | head -1)
+if [[ "$MODE_LINE" == *"insanity"* ]]; then
+    RESPONSE="approve"
+    echo -e "${CYAN}Insanity mode detected - auto-approving commit${NC}"
+else
+    RESPONSE="reject"
+    echo -e "${CYAN}Always-ask mode detected - applying default (reject)${NC}"
 fi
-
-RESPONSE=$(cat "$RESPONSE_FILE")
-rm -f "$RESPONSE_FILE"
 
 echo ""
 echo -e "${CYAN}Processing response:${NC} $RESPONSE"
@@ -96,7 +91,7 @@ case "$RESPONSE" in
         echo -e "${BLUE}============================================${NC}"
         ;;
     "no"|"reject"|"n"|"timeout_continue"|"default_timeout_response")
-        echo -e "${YELLOW}Commit rejected (user response or timeout).${NC}"
+        echo -e "${YELLOW}Commit rejected (default behavior).${NC}"
         echo -e "${YELLOW}Workflow will continue without committing.${NC}"
         echo -e "${CYAN}To commit later, run: .cursor/tools/user-input-capture/commit-with-approval.sh \"message\"${NC}"
         exit 1

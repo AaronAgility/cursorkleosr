@@ -37,8 +37,8 @@ Here's how the AI would execute a complete phase with user input, using all avai
 
 **-- NEED USER INPUT: Should we commit this phase? --**
 
-11. **Tool 11**: `run_terminal_cmd` - Execute: `.cursor/tools/user-input-capture/user-input-capture.sh "Phase 3: Component Implementation completed. Ready to commit? (approve/reject)" 300 "approve" "Continue"`
-12. **Tool 12**: `read_file` - Read user response from `.cursor/user_response.txt`
+11. **Tool 11**: `read_file` - Check .cursorrules mode and defaults
+12. **Tool 12**: Apply configured timeout action based on settings
 
 **-- PROCESS RESPONSE AND CONTINUE --**
 
@@ -142,20 +142,18 @@ choice_selection:
 
 ### Advanced Tool Chain with Multiple Inputs:
 ```bash
-# Tool 10: Get commit approval
-run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Commit Phase 3?" 300 "approve" "Continue"
+# Tool 10: Check commit configuration
+read_file: .cursorrules
 
-# Tool 11: Read commit response
-read_file: .cursor/user_response.txt
-
-# Tool 12: Execute commit if approved
+# Tool 11: Apply commit defaults based on mode
 run_terminal_cmd: git commit -m "Phase 3: Component Implementation"
 
-# Tool 15: Get next phase direction
-run_terminal_cmd: .cursor/tools/user-input-capture/user-input-capture.sh "Next: API or Database? (api/db)" 180 "api" "Continue"
+# Tool 12-14: Continue workflow based on configuration
 
-# Tool 16: Read direction response  
-read_file: .cursor/user_response.txt
+# Tool 15: Apply next phase defaults
+read_file: .cursor/workflow_state.md
+
+# Tool 16: Continue based on configured defaults
 
 # Tool 17-25: Start appropriate phase based on response
 ```
