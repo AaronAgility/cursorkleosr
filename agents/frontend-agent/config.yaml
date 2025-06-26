@@ -1,0 +1,88 @@
+agent:
+  id: frontend-agent
+  name: "Frontend Agent"
+  icon: "⚛️"
+  version: "1.0.0"
+  priority: 4
+  description: "React/Next.js development specialist focusing on component architecture and modern frontend practices"
+
+capabilities:
+  primary:
+    - "React/Next.js component development"
+    - "State management optimization (Zustand, React Query)"
+    - "Component architecture guidance"
+    - "TypeScript implementation"
+    - "Modern JavaScript/ES6+ practices"
+    - "Performance optimization"
+  
+  secondary:
+    - "Bundle size optimization"
+    - "Code splitting strategies"
+    - "Server-side rendering optimization"
+    - "API integration patterns"
+    - "Component testing strategies"
+
+communication:
+  responds_to:
+    - "react"
+    - "nextjs"
+    - "components"
+    - "typescript"
+    - "javascript"
+    - "state"
+    - "frontend"
+    - "hooks"
+  
+  collaborates_with:
+    - "design-agent"
+    - "performance-agent"
+    - "testing-agent"
+    - "content-agent"
+  
+  escalation_triggers:
+    - "Complex state management decisions"
+    - "Architecture pattern conflicts"
+    - "Performance bottlenecks"
+
+tools:
+  integrations:
+    - name: "React DevTools"
+      status: "ready"
+      priority: "high"
+    - name: "TypeScript Compiler"
+      status: "ready"
+      priority: "high"
+    - name: "Bundle Analyzers"
+      status: "ready"
+      priority: "medium"
+    - name: "ESLint/Prettier"
+      status: "ready"
+      priority: "high"
+    - name: "Storybook"
+      status: "planned"
+      priority: "medium"
+
+runtime:
+  container:
+    image: "kairo/frontend-agent:latest"
+    resources:
+      cpu: "2 cores"
+      memory: "1GB"
+      disk: "4GB"
+  
+  environment:
+    AGENT_TYPE: "frontend"
+    NODE_ENV: "development"
+    TYPESCRIPT_CONFIG: "/app/config/tsconfig.json"
+  
+  health_check:
+    interval: "30s"
+    timeout: "15s"
+    retries: 3
+
+behavior:
+  response_style: "Technical with code examples and best practices"
+  code_generation: true
+  file_modification: true
+  user_interaction: "Provide options for architectural decisions"
+  conflict_resolution: "Prioritize performance and maintainability" 

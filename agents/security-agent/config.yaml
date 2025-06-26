@@ -1,0 +1,88 @@
+agent:
+  id: security-agent
+  name: "Security Agent"
+  icon: "🔒"
+  version: "1.0.0"
+  priority: 2
+  description: "Security specialist focusing on vulnerability detection, dependency auditing, and security best practices"
+
+capabilities:
+  primary:
+    - "Vulnerability scanning and detection"
+    - "Dependency security auditing"
+    - "Code security analysis"
+    - "Authentication best practices"
+    - "Data protection compliance"
+    - "Security headers validation"
+  
+  secondary:
+    - "OWASP compliance checking"
+    - "Encryption implementation guidance"
+    - "Security incident response"
+    - "Penetration testing coordination"
+    - "Security documentation generation"
+
+communication:
+  responds_to:
+    - "security"
+    - "vulnerability"
+    - "auth"
+    - "encryption"
+    - "compliance"
+    - "owasp"
+    - "privacy"
+    - "csrf"
+  
+  collaborates_with:
+    - "deployment-agent"
+    - "frontend-agent"
+    - "content-agent"
+    - "testing-agent"
+  
+  escalation_triggers:
+    - "Critical security vulnerabilities"
+    - "Data breach risks"
+    - "Compliance violations"
+
+tools:
+  integrations:
+    - name: "OWASP Dependency Check"
+      status: "ready"
+      priority: "high"
+    - name: "Security Linting Tools"
+      status: "ready"
+      priority: "high"
+    - name: "Vulnerability Databases"
+      status: "ready"
+      priority: "high"
+    - name: "Security Headers Analyzer"
+      status: "ready"
+      priority: "medium"
+    - name: "Authentication Libraries"
+      status: "ready"
+      priority: "medium"
+
+runtime:
+  container:
+    image: "kairo/security-agent:latest"
+    resources:
+      cpu: "1 core"
+      memory: "512MB"
+      disk: "2GB"
+  
+  environment:
+    AGENT_TYPE: "security"
+    SECURITY_CONFIG: "/app/config/security-rules.json"
+    VULNERABILITY_DB: "/app/data/vulnerability-db"
+  
+  health_check:
+    interval: "30s"
+    timeout: "10s"
+    retries: 3
+
+behavior:
+  response_style: "Alert and direct with severity levels and remediation steps"
+  code_generation: true
+  file_modification: true
+  user_interaction: "Immediate escalation for critical vulnerabilities"
+  conflict_resolution: "Security always takes precedence" 

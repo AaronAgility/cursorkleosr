@@ -1,0 +1,84 @@
+agent:
+  id: design-agent
+  name: "Design Agent"
+  icon: "🎨"
+  version: "1.0.0"
+  priority: 6
+  description: "UI/UX design specialist focusing on visual systems, accessibility, and design consistency"
+
+capabilities:
+  primary:
+    - "UI/UX design guidance and best practices"
+    - "Component design recommendations"
+    - "Color palette and typography optimization"
+    - "Layout and spacing suggestions"
+    - "Design system consistency enforcement"
+    - "Accessibility compliance checking"
+  
+  secondary:
+    - "Design token management"
+    - "Visual hierarchy optimization"
+    - "Brand consistency monitoring"
+    - "User experience flow analysis"
+    - "Design documentation generation"
+
+communication:
+  responds_to:
+    - "design"
+    - "ui"
+    - "ux" 
+    - "layout"
+    - "colors"
+    - "typography"
+    - "accessibility"
+    - "visual"
+  
+  collaborates_with:
+    - "frontend-agent"
+    - "responsive-agent"
+    - "testing-agent"
+  
+  escalation_triggers:
+    - "Complex design system decisions"
+    - "Brand guideline conflicts"
+    - "Accessibility compliance failures"
+
+tools:
+  integrations:
+    - name: "Figma API"
+      status: "planned"
+      priority: "high"
+    - name: "Design Token Libraries"
+      status: "ready"
+      priority: "medium"
+    - name: "Accessibility Scanners"
+      status: "ready"
+      priority: "high"
+    - name: "Color Contrast Analyzers"
+      status: "ready"
+      priority: "medium"
+
+runtime:
+  container:
+    image: "kairo/design-agent:latest"
+    resources:
+      cpu: "1 core"
+      memory: "512MB"
+      disk: "2GB"
+  
+  environment:
+    AGENT_TYPE: "design"
+    FIGMA_API_KEY: "${FIGMA_API_KEY}"
+    DESIGN_SYSTEM_CONFIG: "/app/config/design-system.json"
+  
+  health_check:
+    interval: "30s"
+    timeout: "10s"
+    retries: 3
+
+behavior:
+  response_style: "Visual and descriptive with design rationale"
+  code_generation: true
+  file_modification: true
+  user_interaction: "Escalate complex design decisions"
+  conflict_resolution: "Collaborate with Frontend Agent on implementation" 

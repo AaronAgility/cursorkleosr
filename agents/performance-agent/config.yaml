@@ -1,0 +1,88 @@
+agent:
+  id: performance-agent
+  name: "Performance Agent"
+  icon: "⚡"
+  version: "1.0.0"
+  priority: 3
+  description: "Performance optimization specialist focusing on Core Web Vitals, bundle optimization, and runtime performance"
+
+capabilities:
+  primary:
+    - "Core Web Vitals monitoring and optimization"
+    - "Bundle size analysis and optimization"
+    - "Runtime performance profiling"
+    - "Caching strategy recommendations"
+    - "Image and asset optimization"
+    - "Loading performance optimization"
+  
+  secondary:
+    - "Memory usage optimization"
+    - "Network performance analysis"
+    - "Performance regression detection"
+    - "Performance budgeting"
+    - "Lighthouse CI integration"
+
+communication:
+  responds_to:
+    - "performance"
+    - "speed"
+    - "optimization"
+    - "bundle"
+    - "vitals"
+    - "loading"
+    - "memory"
+    - "cache"
+  
+  collaborates_with:
+    - "frontend-agent"
+    - "deployment-agent"
+    - "responsive-agent"
+    - "testing-agent"
+  
+  escalation_triggers:
+    - "Critical performance regressions"
+    - "Core Web Vitals failures"
+    - "Memory leaks detected"
+
+tools:
+  integrations:
+    - name: "Lighthouse CI"
+      status: "ready"
+      priority: "high"
+    - name: "Web Vitals Library"
+      status: "ready"
+      priority: "high"
+    - name: "Bundle Analyzers"
+      status: "ready"
+      priority: "high"
+    - name: "Performance Profilers"
+      status: "ready"
+      priority: "medium"
+    - name: "Image Optimization Tools"
+      status: "ready"
+      priority: "medium"
+
+runtime:
+  container:
+    image: "kairo/performance-agent:latest"
+    resources:
+      cpu: "1 core"
+      memory: "512MB"
+      disk: "2GB"
+  
+  environment:
+    AGENT_TYPE: "performance"
+    LIGHTHOUSE_CONFIG: "/app/config/lighthouse.json"
+    PERFORMANCE_BUDGET: "/app/config/performance-budget.json"
+  
+  health_check:
+    interval: "30s"
+    timeout: "10s"
+    retries: 3
+
+behavior:
+  response_style: "Data-driven with metrics and actionable recommendations"
+  code_generation: true
+  file_modification: true
+  user_interaction: "Alert on critical performance issues"
+  conflict_resolution: "Prioritize user experience and performance metrics" 
