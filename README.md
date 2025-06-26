@@ -1,6 +1,7 @@
 # 🚀 Kairo Multi-Agent Development Platform
+![Screenshot 2025-06-26 at 5 17 29 PM](https://github.com/user-attachments/assets/369dd206-31cc-4d6e-aab6-6c87c963ff6a)
 
-AI-powered development platform with 9 specialized agents and dual-mode architecture (Web + Proton).
+AI-powered development platform with 9 specialized agents and a snazzy electron env.
 
 ## ⚡ **Quick Start from Repository Root**
 
