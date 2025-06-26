@@ -48,20 +48,62 @@ npm run setup       # Install all dependencies
 
 ## 🏗️ Project Structure
 
+Kairo is built as a **TurboRepo monorepo** that efficiently manages multiple interconnected applications and shared packages. This architecture enables fast builds, intelligent caching, and seamless code sharing across the entire platform.
+
+### **TurboRepo Architecture**
+
 ```
-kairo/
-├── kairo-platform/
-│   ├── apps/
-│   │   ├── web/                 # Next.js web application
-│   │   ├── docs/                # Documentation site
-│   │   └── agents/              # Agent system implementation
-│   ├── packages/                # Shared packages and utilities
-│   ├── lib/                     # Core libraries and providers
-│   ├── electron/                # Electron desktop app
-│   └── assets/                  # Icons and static assets
-├── agents/                      # Agent configuration files
-└── package.json                 # Root workspace configuration
+kairo/                           # Root monorepo workspace
+├── kairo-platform/             # Main platform monorepo
+│   ├── apps/                   # Applications (Next.js apps)
+│   │   ├── web/                # Main Kairo web interface
+│   │   ├── docs/               # Documentation site  
+│   │   └── agents/             # Agent system implementation
+│   ├── packages/               # Shared packages and utilities
+│   │   ├── ui/                 # Shared UI components
+│   │   ├── eslint-config/      # Shared ESLint configurations
+│   │   └── typescript-config/  # Shared TypeScript configurations
+│   ├── lib/                    # Core libraries and providers
+│   │   ├── ai-providers.ts     # AI provider integrations
+│   │   └── project-manager.ts  # Project management utilities
+│   ├── electron/               # Electron desktop app
+│   ├── assets/                 # Icons and static assets
+│   ├── turbo.json             # TurboRepo configuration
+│   └── package.json           # Platform workspace configuration
+├── agents/                     # Agent configuration files
+└── package.json               # Root workspace configuration
 ```
+
+### **How TurboRepo Works Here**
+
+- **🚀 Parallel Execution**: Multiple apps can be built and developed simultaneously
+- **📦 Shared Packages**: Common UI components, configs, and utilities are shared across apps
+- **⚡ Intelligent Caching**: TurboRepo caches build outputs for faster subsequent builds
+- **🔄 Dependency Management**: Automatic dependency resolution between packages
+- **🎯 Selective Builds**: Only rebuild what has changed
+
+### **Key Applications**
+
+| Application | Purpose | Port | Command |
+|-------------|---------|------|---------|
+| **Web** | Main Kairo interface with agent orchestration | 3001 | `npm run dev` |
+| **Docs** | Documentation and guides | 4001 | `cd apps/docs && npm run dev` |
+| **Agents** | Agent system backend | - | `cd apps/agents && npm run dev` |
+| **Desktop** | Electron app wrapper | - | `npm run app:dev` |
+
+### **Shared Packages**
+
+- **`@repo/ui`**: Shared React components (buttons, cards, etc.)
+- **`@repo/eslint-config`**: Consistent linting rules across all apps
+- **`@repo/typescript-config`**: Shared TypeScript configurations
+
+### **TurboRepo Benefits for Kairo**
+
+1. **Agent Development**: Each agent can be developed independently while sharing common utilities
+2. **UI Consistency**: Shared component library ensures consistent design across all interfaces  
+3. **Fast Builds**: Only changed packages are rebuilt, making development faster
+4. **Type Safety**: Shared TypeScript configs ensure consistent typing across the platform
+5. **Scalability**: Easy to add new apps or agents without restructuring
 
 ## 🎯 Agent Architecture
 
