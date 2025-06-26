@@ -1,130 +1,149 @@
-# Kairo Multi-Agent Development Platform
+# 🚀 Kairo Multi-Agent Development Platform
 
-A next-generation AI-powered development platform that orchestrates specialized agents to build, optimize, and deploy web applications with real-time preview capabilities.
+AI-powered development platform with 9 specialized agents and dual-mode architecture (Web + Proton).
 
-## 🚀 Quick Start
+## ⚡ **Quick Start from Repository Root**
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd cursorkleosr
+# One-command setup
+npm run setup
 
-# Install dependencies and start all services
+# Start development (default web mode)
 npm run dev
+
+# Or try enhanced Proton mode
+npm run proton:dev
 ```
 
-This will start:
-- **Kairo Orchestration** (AI coordination): `http://localhost:3001`
-- **Documentation**: `http://localhost:4001`
-- **Your Project Preview**: `http://localhost:3000` (in the iframe)
+## 🎯 **All Available Commands**
 
-## ✨ Features
-
-### AI Orchestration
-- **Main Orchestration Agent**: Coordinates 8 specialized AI agents
-- **Multi-Provider AI**: Claude for coding, Gemini for reasoning, Azure for fallback
-- **Intelligent Delegation**: Automatically selects the right agents for each task
-- **Real-time Chat**: Streaming AI responses with code highlighting
-
-### Live Preview System
-- **Real-time Preview**: Instant updates as agents modify your project
-- **Device Simulation**: Desktop, tablet, and mobile views
-- **Safari-style Browser**: Realistic browser chrome with functional address bar
-- **Project Isolation**: Generated projects live in separate Git repositories
-
-### 8 Specialized Agents
-- 🎨 **Design Agent**: UI/UX design, Figma integration, design systems
-- ⚛️ **Frontend Agent**: React/Next.js, state management, components
-- 🗄️ **Content Agent**: CMS integration, SEO optimization, content strategy
-- 🧪 **Testing Agent**: Playwright, Jest, visual regression testing
-- ⚡ **Performance Agent**: Core Web Vitals, optimization, monitoring
-- 🔒 **Security Agent**: Vulnerability scanning, compliance, auth
-- 📱 **Responsive Agent**: Multi-device, PWA features, responsive design
-- 🚀 **Deployment Agent**: CI/CD, infrastructure, deployment automation
-
-## 🏗️ Architecture
-
-### Platform Structure
-```
-kairo-platform/
-├── apps/
-│   ├── web/           # Kairo orchestration (port 3001)
-│   └── docs/          # Documentation (port 4001)
-├── lib/               # Shared utilities
-├── packages/          # Shared packages
-└── agents/            # AI agent configurations
+### **🚀 Development**
+```bash
+npm run dev           # Start web development (default)
+npm run web:dev       # Start web development explicitly
+npm run proton:dev    # Start enhanced Proton development
 ```
 
-### Project Isolation
-Generated projects are created outside the platform in `../kairo-projects/` with independent Git repositories:
-
-```
-workspace/
-├── cursorkleosr/              # Platform source (this repo)
-└── kairo-projects/            # Generated projects
-    ├── project-1/             # Independent Git repo
-    └── project-2/             # Independent Git repo
+### **📦 Building & Production**
+```bash
+npm run build         # Build for web production
+npm run web:build     # Build for web production
+npm run web:start     # Start web production server
+npm run proton:build  # Build with Proton optimizations
+npm run proton:start  # Start Proton production server
 ```
 
-## 🎯 Usage
+### **📊 Environment & Status**
+```bash
+npm run check         # Check dual-mode compatibility
+npm run proton:status # Check Proton CLI status
+npm run proton:info   # Show detailed environment info
+```
 
-1. **Start Kairo**: Run `npm run dev` from the root directory
-2. **Open Interface**: Navigate to `http://localhost:3001`
-3. **Configure Agents**: Click Settings to enable/disable agents and set orchestration mode
-4. **Start Building**: Chat with the orchestration agent to describe what you want to build
-5. **Live Preview**: Watch your project come to life in real-time at `http://localhost:3000`
+### **🛠 Setup & Maintenance**
+```bash
+npm run setup         # Full setup (install + check)
+npm run install:all   # Install all dependencies
+npm run lint          # Run linting across platform
+```
 
-### Example Prompts
+## 🌟 **What Kairo Provides**
 
-- "Build a modern landing page with a hero section and contact form"
-- "Create a React dashboard with charts and user management"
-- "Help me optimize this app's performance and add responsive design"
+- **🤖 9 Specialized AI Agents**: Design, Frontend, Content, Testing, Performance, Security, Responsive, Deployment, Translation
+- **🔄 Live Preview**: Real-time code execution and preview in browser
+- **⚡ Enhanced Development**: Hot reload, advanced bundling, edge simulation
+- **🎯 Type-Safe**: Full TypeScript integration throughout
+- **📦 TurboRepo**: Optimized monorepo with workspace management
+- **🚀 Dual-Mode**: Choose traditional web or enhanced Proton experience
+- **🌐 Universal Deploy**: Web, Proton cloud, or container deployment
 
-## 🛠️ Technology Stack
+## 🏗 **Platform Architecture**
 
-- **Frontend**: Next.js 15.0.0, React 18.2.0, TypeScript 5.3.0
-- **Styling**: Tailwind CSS 3.4.0 with custom Kairo theme
-- **AI Integration**: Vercel AI SDK with multi-provider support
-- **Build System**: Turborepo for monorepo management
-- **Package Manager**: Yarn with workspaces
+```
+kairo/                    # Repository root
+├── README.md                    # This file
+├── QUICK-START.md              # Quick start guide
+├── package.json                # Root commands
+└── kairo-platform/             # Main platform
+    ├── apps/
+    │   ├── web/                # Main UI application
+    │   ├── agents/             # AI agent system  
+    │   └── docs/               # Documentation
+    ├── tools/proton-dev/       # Local Proton CLI
+    ├── lib/runtime-config.ts   # Dual-mode detection
+    ├── proton.config.js        # Proton configuration
+    └── DUAL-MODE-SETUP.md      # Detailed setup guide
+```
 
-## 🎨 Design System
+## 🚀 **Getting Started**
 
-### Colors
-- **Background**: Gradient from `rgb(31 41 55)` with rich gradients
-- **Primary Actions**: `#7933dd` (purple) with white text
-- **Agility Branding**: Integrated Agility CMS logo and yellow accent `#FFCB28`
+1. **Clone** the repository
+2. **Run** `npm run setup` from the root
+3. **Start** development with `npm run dev`
+4. **Open** your browser to see the platform
+5. **Try** `npm run proton:dev` for enhanced features
 
-### UI Principles
-- **Split-screen Layout**: 40% chat interface, 60% live preview
-- **Gradient Backgrounds**: Rich gradients throughout the interface
-- **Professional Typography**: Clean, modern font stack
-- **Responsive Design**: Works seamlessly across all device sizes
+## 🔗 **Test Project Setup (Optional)**
 
-## 🔧 Development
+For enhanced development and testing, Kairo can automatically detect and run test projects:
 
-The platform is built with a focus on:
-- **Developer Experience**: One-command startup, hot reloading, TypeScript
-- **Scalability**: Modular architecture, independent agent system
-- **Performance**: Optimized builds, efficient AI provider switching
-- **Maintainability**: Clean code structure, comprehensive documentation
+### **Option 1: Official Test Project**
+```bash
+# Clone the official test project (recommended)
+cd ..  # Go to parent directory of kairo
+git clone https://github.com/agility/kairo-test-project
+cd kairo
+npm run app:dev  # Start desktop app with test project
+```
 
-## 📚 Documentation
+### **Option 2: Custom Project**
+Place any project with a `turbo dev --filter=web` command in the parent directory:
+```bash
+# Your directory structure should look like:
+parent-directory/
+├── kairo/           # This repository
+├── kairo-test-project/     # Official test project (priority 1)
+└── VibeStage/             # Or any other project (priority 2)
+```
 
-Visit `http://localhost:4001` when running the platform for detailed documentation, API references, and development guides.
+### **Preview Behavior**
+- **With test project**: The preview panel loads your project on `localhost:3000`
+- **Without test project**: The preview panel shows whatever is running on `localhost:3000`
+- **Priority order**: VibeStage → kairo-test-project → any localhost:3000 content
 
-## 🤝 Contributing
+### **Desktop App Commands**
+```bash
+npm run app:dev       # Start desktop app with project detection
+npm run app:build     # Build desktop app for distribution
+npm run app:pack      # Package desktop app
+```
+
+## 📚 **Documentation**
+
+- [Quick Start Guide](./QUICK-START.md) - Get running in 2 minutes
+- [Dual-Mode Setup](./kairo-platform/DUAL-MODE-SETUP.md) - Detailed configuration
+- [Agent Documentation](./kairo-platform/apps/agents/README.md) - AI agent system
+- [Platform README](./kairo-platform/README.md) - Complete platform docs
+
+## 🎯 **Use Cases**
+
+- **Rapid Prototyping**: Get AI agents to build your ideas
+- **Code Review**: Security, performance, and best practice analysis  
+- **Multi-Modal Development**: Web apps, mobile experiences, content management
+- **Team Collaboration**: Specialized agents for different team roles
+- **Learning**: See how AI approaches different development challenges
+
+## 🤝 **Contributing**
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-[License information here]
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Test with both `npm run dev` and `npm run proton:dev`
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 ---
 
-**Kairo** - Transforming web development through intelligent AI orchestration.
+**Built with ❤️ for the future of AI-powered development** 🤖✨
+
+Ready to experience multi-agent development? Run `npm run setup` and get started!

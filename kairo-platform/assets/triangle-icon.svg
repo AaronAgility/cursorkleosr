@@ -1,0 +1,11 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle for better icon visibility -->
+  <circle cx="128" cy="128" r="128" fill="#1a1a1a"/>
+  
+  <!-- Agility Triangle - Scaled and Centered -->
+  <g transform="translate(128, 128) scale(3.5) translate(-20.8, -18)">
+    <path fillRule="evenodd" clipRule="evenodd" 
+          d="M24.4227 30.2102H9.83134L20.8296 11.2799L31.828 30.2102L35.0358 35.8501H41.6587L20.8291 0L0 35.8501H26.9791L24.4227 30.2102Z" 
+          fill="#FFCB28"/>
+  </g>
+</svg> 

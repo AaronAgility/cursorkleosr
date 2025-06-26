@@ -2,9 +2,15 @@
   "name": "kairo-workspace",
   "private": true,
   "scripts": {
-    "dev": "cd kairo-platform && turbo dev",
-    "build": "cd kairo-platform && turbo build",
-    "lint": "cd kairo-platform && turbo lint"
+    "dev": "cd kairo-platform && npm run web:dev",
+    "build": "cd kairo-platform && npm run web:build",
+    "start": "cd kairo-platform && npm run web:start",
+    "lint": "cd kairo-platform && turbo lint",
+    "install:all": "cd kairo-platform && npm install",
+    "setup": "npm run install:all",
+    "app:dev": "pkill -f electron 2>/dev/null || true && pkill -f Electron 2>/dev/null || true && lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true && cd kairo-platform && NODE_ENV=development npx electron electron/main.js",
+    "app:build": "cd kairo-platform && npm run web:build && npx electron-builder --publish=never",
+    "app:pack": "cd kairo-platform && npm run web:build && npx electron-builder"
   },
-  "description": "Kairo Multi-Agent Development Platform - Root workspace"
+  "description": "Kairo Multi-Agent Development Platform - Now with Desktop App Support"
 } 

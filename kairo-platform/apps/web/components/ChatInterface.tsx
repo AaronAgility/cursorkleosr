@@ -156,34 +156,18 @@ export function ChatInterface({
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
-          <div className="text-center text-gray-400 mt-8">
-            <div className="flex justify-center mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-white animate-pulse" />
-              </div>
-            </div>
-            <h3 className="text-lg font-medium mb-2 text-white">Welcome to Kairo</h3>
-            <p className="text-sm">
-              AI agents will coordinate to help build your project.
-            </p>
-            
-            {/* Example prompts */}
-            <div className="mt-6 space-y-2">
-              <p className="text-xs text-gray-500 mb-2">Try asking:</p>
-              <div className="space-y-1 text-xs">
-                <div className="bg-gray-700 rounded px-3 py-2 text-left">
-                  "Create a modern Agility CMS website with a hero section, blog listing, and contact form"
-                </div>
-                <div className="bg-gray-700 rounded px-3 py-2 text-left">
-                  "Build an Agility CMS admin dashboard with content management and analytics"
-                </div>
-                <div className="bg-gray-700 rounded px-3 py-2 text-left">
-                  "Help me set up Agility CMS with Next.js and optimize performance for SEO"
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center text-gray-400">
+              <div className="flex justify-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-white animate-pulse" />
                 </div>
               </div>
+              <h3 className="text-base font-medium mb-1 text-white">Welcome to Kairo</h3>
+              <p className="text-xs">
+                AI agents will coordinate to help build your project.
+              </p>
             </div>
-
-
           </div>
         ) : (
           messages.map((message) => {
@@ -255,6 +239,53 @@ export function ChatInterface({
           </div>
         )}
       </div>
+
+      {/* Suggestions Section - Only show when no messages */}
+      {messages.length === 0 && (
+        <div className="px-4 pb-2">
+          <div className="text-center">
+            {/* Example prompts */}
+            <div className="space-y-2">
+              <p className="text-xs text-gray-500 mb-2">Try asking:</p>
+              <div className="space-y-1 text-xs">
+                <button 
+                  onClick={() => {
+                    const syntheticEvent = {
+                      target: { value: "Create a modern Agility CMS website with a hero section, blog listing, and contact form" }
+                    } as React.ChangeEvent<HTMLTextAreaElement>;
+                    handleInputChange(syntheticEvent);
+                  }}
+                  className="w-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors rounded px-3 py-2 text-left text-gray-400 hover:text-gray-300"
+                >
+                  "Create a modern Agility CMS website with a hero section, blog listing, and contact form"
+                </button>
+                <button 
+                  onClick={() => {
+                    const syntheticEvent = {
+                      target: { value: "Build an Agility CMS admin dashboard with content management and analytics" }
+                    } as React.ChangeEvent<HTMLTextAreaElement>;
+                    handleInputChange(syntheticEvent);
+                  }}
+                  className="w-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors rounded px-3 py-2 text-left text-gray-400 hover:text-gray-300"
+                >
+                  "Build an Agility CMS admin dashboard with content management and analytics"
+                </button>
+                <button 
+                  onClick={() => {
+                    const syntheticEvent = {
+                      target: { value: "Help me set up Agility CMS with Next.js and optimize performance for SEO" }
+                    } as React.ChangeEvent<HTMLTextAreaElement>;
+                    handleInputChange(syntheticEvent);
+                  }}
+                  className="w-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors rounded px-3 py-2 text-left text-gray-400 hover:text-gray-300"
+                >
+                  "Help me set up Agility CMS with Next.js and optimize performance for SEO"
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Input Form */}
       <div className="border-t border-gray-700 p-4">

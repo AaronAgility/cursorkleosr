@@ -237,8 +237,7 @@ Projects are managed by the Kairo Workspace at http://localhost:3000
       react: {
         dev: 'vite',
         build: 'vite build',
-        preview: 'vite preview',
-        lint: 'eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0'
+        preview: 'vite preview'
       },
       vue: {
         dev: 'vite',
@@ -252,7 +251,7 @@ Projects are managed by the Kairo Workspace at http://localhost:3000
       }
     };
 
-    return scripts[type] || scripts.vanilla;
+    return scripts[type] || scripts.vanilla || {};
   }
 
   private getDependenciesForType(type: string): Record<string, string> {

@@ -1,5 +1,5 @@
 import { streamText } from 'ai';
-import { getProviderForAgent } from '../../../../lib/ai-providers';
+import { getProviderForAgent } from '../../../lib/ai-providers';
 import { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
     // For now, we'll use the frontend agent as our main orchestration agent
     // In the future, this would be a specialized orchestration model
-    const model = getProviderForAgent('frontend-agent', 'primary');
+    const model = getProviderForAgent();
 
     // Enhance the system prompt to include orchestration context
     const systemPrompt = `You are the Main Orchestration Agent for Kairo, a multi-agent development platform.

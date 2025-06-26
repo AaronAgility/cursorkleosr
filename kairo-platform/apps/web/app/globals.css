@@ -123,3 +123,27 @@ body {
     content: '...';
   }
 }
+
+/* Electron app region styles for window dragging */
+.electron-drag {
+  -webkit-app-region: drag;
+}
+
+.electron-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* Make the header draggable on Electron */
+@media (prefers-color-scheme: dark) {
+  .electron-header {
+    -webkit-app-region: drag;
+  }
+  
+  /* Ensure interactive elements in header are not draggable */
+  .electron-header button,
+  .electron-header a,
+  .electron-header input,
+  .electron-header select {
+    -webkit-app-region: no-drag;
+  }
+}

@@ -1,5 +1,10 @@
 #turbo
 .turbo
+*/.turbo
+
+#electron
+dist
+build
 
 #node
 node_modules
